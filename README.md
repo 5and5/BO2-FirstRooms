@@ -24,9 +24,22 @@
     * Map names
         * Locations
 
-* Settings
-    * Starting Round
-    * Disable walkers
-    * Perma Perks
+* Start Round
+    * 10
+    * 15
+    * 20
 
-* Map Restart
+* Settings
+    * Disable Walkers
+    * Perma Perks
+    * Power On
+    * Give Sallys
+
+* Restart
+
+
+## TODO
+- upgraded wall buys
+- 5 second counter after leave the playable area till death
+- Give perks (similar to challenge mod)
+- zombie counter
