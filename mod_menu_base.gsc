@@ -495,7 +495,7 @@ runMenuIndex( menu )
         self addMenuPar("SubMenu2", ::controlMenu, "newMenu", "SubMenu2");
 		self addMenuPar("SubMenu3", ::controlMenu, "newMenu", "SubMenu3");
         self addMenuPar("SubMenu4", ::controlMenu, "newMenu", "SubMenu4");
-        self addMenuPar("Clients List", ::controlMenu, "newMenu", "playerMenu"); 
+        //self addMenuPar("Clients List", ::controlMenu, "newMenu", "playerMenu"); 
         //etc
        	
     }
@@ -504,7 +504,7 @@ runMenuIndex( menu )
             return;
  
 	self addmenu("SubMenu1", "SubMenu1", "main");
-    self addMenuPar("Option", ::Test);
+    self addMenuPar("Die Rise", ::DieRise);
     self addMenuPar("Option", ::Test);
     self addMenuPar("Option", ::Test);
     self addMenuPar("Option", ::Test);
@@ -1337,4 +1337,10 @@ updateMenu_color_system_Map(i)
     self addMenuPar("Set To Black", i, (0,0,0));
     self addMenuPar("Set To White", i, (1,1,1));
     wait .00001;
+}
+
+
+DieRise()
+{
+	iPrintLn("DieRise");
 }
