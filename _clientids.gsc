@@ -34,7 +34,7 @@ init()
 	initializeVars();
 	firstRoomFuncsAndVars();
 	starting_round();
-    disable_walkers();
+    disable_walkers_toggle();
 	disable_carpenter();
 	wallbuy_increase_trigger_radius();
 	deleteBuyableDoorsTrigs();
@@ -706,7 +706,7 @@ disable_player_pers_upgrades() //credit to jbleezy for this function
 		permaperks = strTok("pers_revivenoperk,pers_insta_kill,pers_jugg,pers_sniper_counter,pers_flopper_counter,pers_perk_lose_counter,pers_box_weapon_counter,pers_multikill_headshots", ",");
 		for (i = 0; i < permaperks.size; i++)
 		{
-			self increment_client_stat(permaperks[i], 0);
+			self maps/mp/zombies/_zm_stats::increment_client_stat(permaperks[i], 0);
 			wait 0.25;
 		}
 	}
@@ -762,6 +762,7 @@ kill_start_chest()
 	start_chest = getstruct( "start_chest", "script_noteworthy" );
 	start_chest maps/mp/zombies/_zm_magicbox::hide_chest( 1 );
 	start_chest notify( "kill_chest_think" );
+
 }
 
 watch_for_respawn()
@@ -978,7 +979,7 @@ give_sallys()
 	}
 }
 
-disable_walkers()
+disable_walkers_toggle()
 {	
 	if( getDvarInt( "walkers") == 1 )
 	{
@@ -1805,8 +1806,8 @@ PrintMessageToEntry(String,timeplus)
 WelcomeMessage()
 {
  		S("Welcome ^7"+getNameNotClan(self)+ "^7. Press [{+speed_throw}] and [{+melee}]");
- 		S("Made by 5and5 and JezuzLizard");
- 		self PrintMessageToEntry("^1BO2 ^4First ^1Room ^4Mod ^4!\n^1E^4n^1j^4o^1y^4!");
+ 		//S("Made by 5and5 and JezuzLizard");
+ 		self PrintMessageToEntry("         ^7BO2 First Rooms Mod! \n^7Made by 5and5 and JezuzLizard");
  		// 	\n goes down a line :D
 }
 
@@ -1948,7 +1949,7 @@ getStringTableEntry(id)
  
         return stringTableEntry;
 }
- 
+
 purgeStringTable()
 {
         stringTable = [];
@@ -1958,7 +1959,7 @@ purgeStringTable()
  
         self.stringTable = stringTable; 
 }
- 
+
 purgeTextTable()
 {
         textTable = [];
@@ -1971,7 +1972,7 @@ purgeTextTable()
  
         self.textTable = textTable;
 }
- 
+
 addTextTableEntry(element, stringId)
 {
         entry = spawnStruct();
@@ -2455,49 +2456,49 @@ reset_dierise_dvars()
 
 diersie_m14()
 {
-	iPrintLn("m14");
+	Sb("First Rooms Set: M14");
     reset_dierise_dvars();
     setDvar( "m14DieRise", 1 );
 }
 dierise_pdw()
 {
-	iPrintLn("pdw");
+	Sb("First Rooms Set: Pdw");
     reset_dierise_dvars();
     setDvar( "pdwDieRise", 1 );
 }
 dierise_svu()
 {
-	iPrintLn("svu");
+	Sb("First Rooms Set: Svu");
     reset_dierise_dvars();
     setDvar( "svuDieRise", 1 );
 }
 dierise_m16()
 {
-	iPrintLn("m16");
+	Sb("First Rooms Set: m16");
     reset_dierise_dvars();
     setDvar( "m16DieRise", 1 );
 }
 dierise_an94()
 {
-	iPrintLn("an94");
+	Sb("First Rooms Set: AN94");
     reset_dierise_dvars();
     setDvar( "an94DieRise", 1 );
 }
 dierise_mp5()
 {
-	iPrintLn("mp5");
+	Sb("First Rooms Set: Mp5");
     reset_dierise_dvars();
     setDvar( "mp5DieRise", 1 );
 }
 dierise_semtex()
 {
-	iPrintLn("semtex");
+	Sb("First Rooms Set: Semtex");
     reset_dierise_dvars();
     setDvar( "semtexDieRise", 1 );
 }
 dierise_b23r()
 {
-	iPrintLn("b23r");
+	Sb("First Rooms Set: B23r");
     reset_dierise_dvars();
     setDvar( "b23rDieRise", 1 );
 }
@@ -2505,19 +2506,17 @@ dierise_b23r()
 // start rounds
 start_round_10()
 {
-    iPrintLn("10");
+    Sb("Start Round Set: 10");
     setDvar( "start_round", 10 );
 }
-
 start_round_15()
 {
-    iPrintLn("15");
+    Sb("Start Round Set: 15");
     setDvar( "start_round", 15 );
 }
-
 start_round_20()
 {
-    iPrintLn("20");
+    Sb("Start Round Set: 20");
     setDvar( "start_round", 20 );
 }
 
@@ -2525,46 +2524,47 @@ start_round_20()
 map_restart()
 {
     //setDvar( "map_restart", 1 );
-    iPrintLn("map restart");
+    Sb("map restart");
 }
 
 // Settings
 enable_walkers()
-{
+{	
+	Sb("Walkers Enabled");
 	setDvar( "walkers", 1 );
 }
-
 disable_walkers()
-{
+{	
+	Sb("Walkers Disabled");
 	setDvar( "walkers", 0 );
 }
-
 enable_perma_perks()
-{
+{	
+	Sb("Perma Perks Enabled");
 	setDvar( "perma_perks", 1 );
 }
-
 disable_perma_perks()
-{
+{	
+	Sb("Perma Perk Disabled");
 	setDvar( "perma_perks", 0 );
 }
-
 enable_power()
-{
+{	
+	Sb("Power Enabled");
 	setDvar( "power", 1 );
 }
-
 disable_power()
 {
+	Sb("Power Disabled");
 	setDvar( "power", 0 );
 }
-
 enable_sallys()
 {
+	Sb("M1911 Replaced with Sallys");
 	setDvar( "sallys", 1 );
 }
-
 disable_sallys()
 {
+	Sb("M1911 Restored");
 	setDvar( "sallys", 0 );
 }
