@@ -103,14 +103,13 @@ onPlayerSpawned()
         }
 
 		self give_sallys();
+		self set_health();
 
     	// if ( level.script == "zm_prison" )
         // {
 		// 	self.lives = 1;
 		// 	//self setclientfieldtoplayer( "player_lives", self.lives );
 		// }
-		// self.maxHealth = level.playerHealthMod;
-		// self.health = self.maxHealth;
 
 		players = get_players();
 		if ( players == 1 )
@@ -979,6 +978,16 @@ give_sallys()
 	}
 }
 
+set_health()
+{	
+	if( getDvar( "player_health" ) == "" )
+		setDvar( "player_health", 100 );
+	health = getDvarInt( "player_health" );
+
+	self.maxHealth = health;
+	self.health = self.maxHealth;
+}
+
 disable_walkers_toggle()
 {	
 	if( getDvarInt( "walkers") == 1 )
@@ -1095,8 +1104,9 @@ runMenuIndex( menu )
     {
         self addMenuPar("Maps", ::controlMenu, "newMenu", "Maps");
         self addMenuPar("Start Round", ::controlMenu, "newMenu", "Start Round");
+		self addMenuPar("Player Health", ::controlMenu, "newMenu", "Player Health");
         self addMenuPar("Settings", ::controlMenu, "newMenu", "Settings");
-        self addMenuPar("Map Restart", ::map_restart);
+        //self addMenuPar("Map Restart", ::map_restart);
     }
 
     if( isDefined(menu) )
@@ -1142,6 +1152,14 @@ runMenuIndex( menu )
     self addMenuPar("Round 10", ::start_round_10);
     self addMenuPar("Round 15", ::start_round_15);
     self addMenuPar("Round 20", ::start_round_20);
+
+
+	self addmenu("Player Health", "Player Health", "main");
+    self addMenuPar("Health 100", ::player_health_100);
+	self addMenuPar("Health 150", ::player_health_150);
+	self addMenuPar("Health 200", ::player_health_200);
+	self addMenuPar("Health 250", ::player_health_250);
+
 
 
 	self addmenu("Settings", "Settings", "main");
@@ -2518,6 +2536,29 @@ start_round_20()
 {
     Sb("Start Round Set: 20");
     setDvar( "start_round", 20 );
+}
+
+
+// player health
+player_health_100()
+{
+	Sb("Health Set: 100");
+    setDvar( "player_health", 100 );
+}
+player_health_150()
+{
+	Sb("Health Set: 150");
+    setDvar( "player_health", 150 );
+}
+player_health_200()
+{
+	Sb("Health Set: 200");
+    setDvar( "player_health", 200 );
+}
+player_health_250()
+{
+	Sb("Health Set: 250");
+    setDvar( "player_health", 250 );
 }
 
 

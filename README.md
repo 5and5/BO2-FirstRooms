@@ -29,13 +29,19 @@
     * 15
     * 20
 
+* Player Health
+    * 100
+    * 150
+    * 200
+    * 250
+
 * Settings
     * Disable Walkers
     * Perma Perks
     * Power On
     * Give Sallys
 
-* Restart
+
 
 
 ## TODO
