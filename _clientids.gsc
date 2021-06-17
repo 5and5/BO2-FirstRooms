@@ -235,7 +235,7 @@ initializeVars()
 	level.firstRoomsOriginsNamesArray = array( "PAP", "middleBunker", "gen2", "gen2Trench", "gen3", "gen3Trench", "gen5" );
 	level.firstRooms[ "PAP" ] = spawnstruct();
 	level.firstRooms[ "PAP" ].name = "PAP";
-	//level.firstRooms[ "PAP" ].active = getDvarIntDefault( "PAP", 0 );
+	level.firstRooms[ "PAP" ].active = getDvarIntDefault( "PAP", 0 );
 	level.firstRooms[ "PAP" ].active = 1;
 	level.firstRooms[ "middleBunker" ] = spawnstruct();
 	level.firstRooms[ "middleBunker" ].name = "middleBunker";
@@ -595,31 +595,31 @@ firstRoomFuncsAndVars()
 	}
 	if ( level.script == "zm_tomb" )
 	{
-		if ( level.firstRooms[ "PAP" ].active )
+		if ( getDvarInt( "PAP" ) == 1 )
 		{
 	   		level thread setup_first_room_zones( level.excavation_site_zones, level.teleportPointsPAP );
 	   	}
-	   	else if ( level.firstRooms[ "middleBunker" ].active )
+	   	else if ( getDvarInt( "middleBunker" ) == 1 )
 	   	{
 	    	level thread setup_first_room_zones( level.five_seven_room_zones, level.teleportPointsMiddleBunker );
 	    }
-	    else if ( level.firstRooms[ "gen2" ].active )
+	    else if ( getDvarInt( "gen2" ) == 1 )
 	    {
 	    	level thread setup_first_room_zones( level.gen2_zones, level.teleportPointsGen2 );
 	    }
-	    else if ( level.firstRooms[ "gen2Trench" ].active )
+	    else if ( getDvarInt( "gen2Trench" ) == 1 )
 	    {
 	    	level thread setup_first_room_zones( level.trench_between_gen2_and_start_zones, level.teleportPointsGen2Trench );
 	    }
-	    else if ( level.firstRooms[ "gen3" ].active )
+	    else if ( getDvarInt( "gen3" ) == 1 )
 	    {
 	    	level thread setup_first_room_zones( level.gen3_zones, level.teleportPointsGen3 );
 	    }
-	    else if ( level.firstRooms[ "gen3Trench" ].active )
+	    else if ( getDvarInt( "gen3Trench" ) == 1 )
 	  	{
 	   		level thread setup_first_room_zones( level.trench_between_gen3_and_start_zones, level.teleportPointsGen3Trench );
 	   	}
-	   	else if ( level.firstRooms[ "gen5" ].active )
+	   	else if ( getDvarInt( "gen5" ) == 1 )
 	  	{
 	   		level thread setup_first_room_zones( level.gen5_zones, level.teleportPointsStaminup );
 	   	}
@@ -1226,14 +1226,14 @@ runMenuIndex( menu )
     self addMenuPar("B23R", ::dierise_b23r);
 
     self addmenu("Origins Locations", "Origins Locations", "main");
-    self addMenuPar("M14", ::diersie_m14);
-    self addMenuPar("PDW", ::dierise_pdw);
-    self addMenuPar("SVU", ::dierise_svu);
-    self addMenuPar("M16", ::dierise_m16);
-    self addMenuPar("AN94", ::dierise_an94);
-    self addMenuPar("MP5", ::dierise_mp5);
-    self addMenuPar("Semtex", ::dierise_semtex);
-    self addMenuPar("B23R", ::dierise_b23r);
+    self addMenuPar("PAP", ::origins_pap);
+    self addMenuPar("Middle Bunker", ::origins_middleBunker);
+    self addMenuPar("Gen 2", ::origins_gen2);
+    self addMenuPar("Gen 2 Trench", ::origins_gen2Trench);
+    self addMenuPar("Gen 3", ::origins_gen3);
+    self addMenuPar("Gen 3 Trench", ::origins_gen3Trench);
+    self addMenuPar("Gen 5", ::origins_gen5);
+
 
 	
 	self addmenu("Start Round", "Start Round", "main");
@@ -2614,6 +2614,63 @@ dierise_b23r()
     setDvar( "b23rDieRise", 1 );
 }
 
+
+// origins
+reset_origins_dvars()
+{
+    setDvar( "PAP", 0 );
+    setDvar( "middleBunker", 0 );
+    setDvar( "gen2", 0 );
+    setDvar( "gen2Trench", 0 );
+    setDvar( "gen3", 0 );
+    setDvar( "gen3Trench", 0 );
+    setDvar( "gen5", 0 );
+}
+
+origins_pap()
+{
+	Sb("First Rooms Set: PAP");
+    reset_origins_dvars();
+    setDvar( "PAP", 1 );
+}
+origins_middleBunker()
+{
+	Sb("First Rooms Set: Middle Bunker");
+    reset_origins_dvars();
+    setDvar( "middleBunker", 1 );
+}
+origins_gen2()
+{
+	Sb("First Rooms Set: Gen 2");
+    reset_origins_dvars();
+    setDvar( "gen2", 1 );
+}
+origins_gen2Trench()
+{
+	Sb("First Rooms Set: Gen 2 Trench");
+    reset_origins_dvars();
+    setDvar( "gen2Trench", 1 );
+}
+origins_gen3()
+{
+	Sb("First Rooms Set: Gen 3");
+    reset_origins_dvars();
+    setDvar( "gen3", 1 );
+}
+origins_gen3Trench()
+{
+	Sb("First Rooms Set: Gen 3 Trench");
+    reset_origins_dvars();
+    setDvar( "gen3Trench", 1 );
+}
+origins_gen5()
+{
+	Sb("First Rooms Set: Gen 5");
+    reset_origins_dvars();
+    setDvar( "gen5", 1 );
+}
+
+
 // start rounds
 start_round_10()
 {
@@ -2630,6 +2687,7 @@ start_round_20()
     Sb("Start Round Set: 20");
     setDvar( "start_round", 20 );
 }
+
 
 
 // player health
