@@ -46,6 +46,5 @@
 
 ## TODO
 - upgraded wall buys
-- 5 second counter after leave the playable area till death
 - Give perks (similar to challenge mod)
 - zombie counter
