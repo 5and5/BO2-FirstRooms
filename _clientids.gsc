@@ -66,7 +66,7 @@ init()
     {
         level waittill("connected", player);
         if(isDefined(level.player_out_of_playable_area_monitor))
-                   level.player_out_of_playable_area_monitor = false;
+            level.player_out_of_playable_area_monitor = false;
         player thread onPlayerSpawned();
         thread ColorFeed();
     }
@@ -81,10 +81,8 @@ onPlayerSpawned()
 	self.initial_spawns = true;
 
     // mod menu
-    self.menuName = "Menu Base";
+    self.menuName = "First Rooms Menu";
     self.stopThreading = false;
-    self endon("disconnect");
-    isFirstSpawn = true;
 
  	for(;;)
     {
@@ -99,7 +97,12 @@ onPlayerSpawned()
 
 			self thread watch_for_respawn();
        		self thread disable_player_pers_upgrades();
+
+			// mod menu
+			initOverFlowFix();
         }
+
+		self give_sallys();
 
     	// if ( level.script == "zm_prison" )
         // {
@@ -132,11 +135,6 @@ onPlayerSpawned()
             self playerSetup();
             self.stopThreading = true;
             self thread WelcomeMessage();
-        }
-        if(isFirstSpawn)
-        {
-        	initOverFlowFix();
-         	isFirstSpawn = false;
         }
 	}
 }
@@ -703,32 +701,45 @@ disable_player_pers_upgrades() //credit to jbleezy for this function
 {
 	flag_wait( "initial_blackscreen_passed" );
 
-	if (isDefined(self.pers_upgrades_awarded))
+	if( getDvarInt( "perma_perks") == 1 )
 	{
-		upgrade = getFirstArrayKey(self.pers_upgrades_awarded);
-		
-		while (isDefined(upgrade))
+		permaperks = strTok("pers_revivenoperk,pers_insta_kill,pers_jugg,pers_sniper_counter,pers_flopper_counter,pers_perk_lose_counter,pers_box_weapon_counter,pers_multikill_headshots", ",");
+		for (i = 0; i < permaperks.size; i++)
 		{
-			self.pers_upgrades_awarded[upgrade] = 0;
-			upgrade = getNextArrayKey(self.pers_upgrades_awarded, upgrade);
+			self increment_client_stat(permaperks[i], 0);
+			wait 0.25;
 		}
 	}
-	if (isDefined(level.pers_upgrades_keys))
+	else if( getDvarInt( "perma_perks") == 0 )
 	{
-		index = 0;
-		while (index < level.pers_upgrades_keys.size)
+		if (isDefined(self.pers_upgrades_awarded))
 		{
-			str_name = level.pers_upgrades_keys[index];
-			stat_index = 0;
-			while (stat_index < level.pers_upgrades[str_name].stat_names.size)
+			upgrade = getFirstArrayKey(self.pers_upgrades_awarded);
+			
+			while (isDefined(upgrade))
 			{
-				self maps/mp/zombies/_zm_stats::zero_client_stat(level.pers_upgrades[str_name].stat_names[stat_index], 0);
-				stat_index++;
+				self.pers_upgrades_awarded[upgrade] = 0;
+				upgrade = getNextArrayKey(self.pers_upgrades_awarded, upgrade);
 			}
-			index++;
 		}
+		if (isDefined(level.pers_upgrades_keys))
+		{
+			index = 0;
+			while (index < level.pers_upgrades_keys.size)
+			{
+				str_name = level.pers_upgrades_keys[index];
+				stat_index = 0;
+				while (stat_index < level.pers_upgrades[str_name].stat_names.size)
+				{
+					self maps/mp/zombies/_zm_stats::zero_client_stat(level.pers_upgrades[str_name].stat_names[stat_index], 0);
+					stat_index++;
+				}
+				index++;
+			}
+		}
+		level notify("initial_disable_player_pers_upgrades");
 	}
-	level notify("initial_disable_player_pers_upgrades");
+	
 }
 
 soloModeQuickReviveGiver()
@@ -894,10 +905,7 @@ setup_first_room_zones( zones, teleportPoints )
 	flag_wait( "start_zombie_round_logic" );
 	//flag_wait( "gameDelayDone" );
 
-	// if ( isDefined( level.powerOn ) && level.powerOn )
-	// {
-	// 	turnOnPower();
-	// }
+	turnOnPower();
 	//wait level.teleportDelay;
 	disable_zones_exclude( zones );
 	teleportAllPlayers( teleportPoints );
@@ -927,28 +935,58 @@ wallbuy_increase_trigger_radius()
 }
 
 turnOnPower() //by xepixtvx
-{
-	if ( level.firstRooms[ "gen3" ].active || level.firstRooms[ "gen5" ].active || level.firstRooms[ "gen2" ].active )
+{	
+	if( getDvarInt( "walkers") == 1 )
 	{
-		return;
+		if ( level.firstRooms[ "gen3" ].active || level.firstRooms[ "gen5" ].active || level.firstRooms[ "gen2" ].active )
+		{
+			return;
+		}
+		trig = getEnt( "use_elec_switch", "targetname" );
+		powerSwitch = getEnt( "elec_switch", "targetname" );
+		powerSwitch notSolid();
+		trig setHintString( &"ZOMBIE_ELECTRIC_SWITCH" );
+		trig setVisibleToAll();
+		trig notify( "trigger", self );
+		trig setInvisibleToAll();
+		powerSwitch rotateRoll( -90, 0, 3 );
+		level thread maps/mp/zombies/_zm_perks::perk_unpause_all_perks();
+		powerSwitch waittill( "rotatedone" );
+		flag_set( "power_on" );
+		level setClientField( "zombie_power_on", 1 ); 
 	}
-	trig = getEnt( "use_elec_switch", "targetname" );
-	powerSwitch = getEnt( "elec_switch", "targetname" );
-	powerSwitch notSolid();
-	trig setHintString( &"ZOMBIE_ELECTRIC_SWITCH" );
-	trig setVisibleToAll();
-	trig notify( "trigger", self );
-	trig setInvisibleToAll();
-	powerSwitch rotateRoll( -90, 0, 3 );
-	level thread maps/mp/zombies/_zm_perks::perk_unpause_all_perks();
-	powerSwitch waittill( "rotatedone" );
-	flag_set( "power_on" );
-	level setClientField( "zombie_power_on", 1 ); 
+}
+
+give_sallys()
+{	
+	if ( getDvarInt( "sallys") == 1 )
+	{
+		if(level.script != "zm_tomb")
+		{
+			self TakeWeapon( "m1911_zm" );
+			self GiveWeapon( "m1911_upgraded_zm", 0, self maps/mp/zombies/_zm_weapons::get_pack_a_punch_weapon_options( "m1911_upgraded_zm" ) );
+			self GiveStartAmmo( "m1911_upgraded_zm" );
+			self SwitchToWeapon( "m1911_upgraded_zm" );
+		}
+		else
+		{
+			self TakeWeapon( "c96_zm" );
+			self GiveWeapon( "c96_upgraded_zm", 0, self maps/mp/zombies/_zm_weapons::get_pack_a_punch_weapon_options( "c96_upgraded_zm" ) );
+			self GiveStartAmmo( "c96_upgraded_zm" );
+			self SwitchToWeapon( "c96_upgraded_zm" );
+		}
+	}
 }
 
 disable_walkers()
-{
-    level.speed_change_round = undefined;
+{	
+	if( getDvarInt( "walkers") == 1 )
+	{
+	}
+	else
+	{
+		level.speed_change_round = undefined;
+	}
 }
 
 player_in_allowed_four_zones_monitor( zones, teleportPoints )
@@ -1046,6 +1084,115 @@ get_position()
 // ********* MENU************************************************* //
 
 
+// Menu Structure
+
+runMenuIndex( menu )
+{
+    self addmenu("main", getMenuName());
+    //if verified
+    if( self getVerfication() > 0 )
+    {
+        self addMenuPar("Maps", ::controlMenu, "newMenu", "Maps");
+        self addMenuPar("Start Round", ::controlMenu, "newMenu", "Start Round");
+        self addMenuPar("Settings", ::controlMenu, "newMenu", "Settings");
+        self addMenuPar("Map Restart", ::map_restart);
+    }
+
+    if( isDefined(menu) )
+            return;
+ 
+	self addmenu("Maps", "Maps", "main");
+    self addMenuPar("Die Rise", ::controlMenu, "newMenu", "Die Rise Locations");
+    self addMenuPar("Mob of the Dead", ::controlMenu, "newMenu", "Mob of the Dead Locations");
+    self addMenuPar("Origins", ::controlMenu, "newMenu", "Origins Locations");
+
+    self addmenu("Die Rise Locations", "Die Rise Locations", "main");
+    self addMenuPar("M14", ::diersie_m14);
+    self addMenuPar("PDW", ::dierise_pdw);
+    self addMenuPar("SVU", ::dierise_svu);
+    self addMenuPar("M16", ::dierise_m16);
+    self addMenuPar("AN94", ::dierise_an94);
+    self addMenuPar("MP5", ::dierise_mp5);
+    self addMenuPar("Semtex", ::dierise_semtex);
+    self addMenuPar("B23R", ::dierise_b23r);
+
+    self addmenu("Mob of the Dead Locations", "Mob of the Dead Locations", "main");
+    self addMenuPar("M14", ::diersie_m14);
+    self addMenuPar("PDW", ::dierise_pdw);
+    self addMenuPar("SVU", ::dierise_svu);
+    self addMenuPar("M16", ::dierise_m16);
+    self addMenuPar("AN94", ::dierise_an94);
+    self addMenuPar("MP5", ::dierise_mp5);
+    self addMenuPar("Semtex", ::dierise_semtex);
+    self addMenuPar("B23R", ::dierise_b23r);
+
+    self addmenu("Origins Locations", "Origins Locations", "main");
+    self addMenuPar("M14", ::diersie_m14);
+    self addMenuPar("PDW", ::dierise_pdw);
+    self addMenuPar("SVU", ::dierise_svu);
+    self addMenuPar("M16", ::dierise_m16);
+    self addMenuPar("AN94", ::dierise_an94);
+    self addMenuPar("MP5", ::dierise_mp5);
+    self addMenuPar("Semtex", ::dierise_semtex);
+    self addMenuPar("B23R", ::dierise_b23r);
+
+	
+	self addmenu("Start Round", "Start Round", "main");
+    self addMenuPar("Round 10", ::start_round_10);
+    self addMenuPar("Round 15", ::start_round_15);
+    self addMenuPar("Round 20", ::start_round_20);
+
+
+	self addmenu("Settings", "Settings", "main");
+	self addMenuPar("Walkers", ::controlMenu, "newMenu", "Walkers");
+	self addMenuPar("Perma Perks", ::controlMenu, "newMenu", "Perma Perks");
+	self addMenuPar("Power", ::controlMenu, "newMenu", "Power");
+	self addMenuPar("Give Sallys", ::controlMenu, "newMenu", "Give Sallys");
+
+	self addmenu("Walkers", "Walkers", "main");
+    self addMenuPar("On", ::enable_walkers);
+    self addMenuPar("Off", ::disable_walkers);
+
+	self addmenu("Perma Perks", "Perma Perks", "main");
+    self addMenuPar("On", ::enable_perma_perks);
+    self addMenuPar("Off", ::disable_perma_perks);
+
+	self addmenu("Power", "Power", "main");
+    self addMenuPar("On", ::enable_power);
+    self addMenuPar("Off", ::disable_power);
+
+	self addmenu("Give Sallys", "Give Sallys", "main");
+    self addMenuPar("On", ::enable_sallys);
+    self addMenuPar("Off", ::disable_sallys);
+
+    
+    
+    // self addmenu("SubMenu3", "SubMenu3", "main");
+    // self addMenuPar("Option", ::Test);
+    // self addMenuPar("Option", ::Test);
+    // self addMenuPar("Option", ::Test);
+    // self addMenuPar("Option", ::Test);
+    
+    // self addmenu("SubMenu4", "SubMenu4", "main");
+    // self addMenuPar("Option", ::Test);
+    // self addMenuPar("Option", ::Test);
+    // self addMenuPar("Option", ::Test);
+    // self addMenuPar("Option", ::Test);
+
+   
+	
+	
+	
+
+	//player options 
+    for( a = 0; a < getplayers().size; a++ )
+    {
+        player = getplayers()[a];
+        self addAbnormalMenu("playerMenu", "Player Menu", "main", getNameNotClan( player )+" Options", ::controlMenu, "newMenu", getNameNotClan( player )+"options");
+ 
+        self addAbnormalMenu(getNameNotClan( player )+"options", getNameNotClan( player )+" Options", "playerMenu", "Admin", ::verificationOptions, a, "changeVerification", "admin");
+    }
+}
 
 
 ColorFeed()
@@ -1486,106 +1633,6 @@ undefineMenu(menu)
         self.menu["items"][menu].input3[a] = undefined;        
     }
 }
-
-
-// Menu Structure
-
-runMenuIndex( menu )
-{
-    self addmenu("main", getMenuName());
-    //if verified
-    if( self getVerfication() > 0 )
-    {
-        self addMenuPar("Maps", ::controlMenu, "newMenu", "Maps");
-        self addMenuPar("Start Round", ::controlMenu, "newMenu", "Start Round");
-        self addMenuPar("Settings", ::controlMenu, "newMenu", "Settings");
-        self addMenuPar("Map Restart", ::map_restart);
-		//self addMenuPar("SubMenu3", ::controlMenu, "newMenu", "SubMenu3");
-        //self addMenuPar("SubMenu4", ::controlMenu, "newMenu", "SubMenu4");
-        //self addMenuPar("Clients List", ::controlMenu, "newMenu", "playerMenu"); 
-        //etc
-       	
-    }
-
-    if( isDefined(menu) )
-            return;
- 
-	self addmenu("Maps", "Maps", "main");
-    self addMenuPar("Die Rise", ::controlMenu, "newMenu", "Die Rise Locations");
-    self addMenuPar("Mob of the Dead", ::controlMenu, "newMenu", "Mob of the Dead Locations");
-    self addMenuPar("Origins", ::controlMenu, "newMenu", "Origins Locations");
-
-
-    self addmenu("Die Rise Locations", "Die Rise Locations", "main");
-    self addMenuPar("M14", ::diersie_m14);
-    self addMenuPar("PDW", ::dierise_pdw);
-    self addMenuPar("SVU", ::dierise_svu);
-    self addMenuPar("M16", ::dierise_m16);
-    self addMenuPar("AN94", ::dierise_an94);
-    self addMenuPar("MP5", ::dierise_mp5);
-    self addMenuPar("Semtex", ::dierise_semtex);
-    self addMenuPar("B23R", ::dierise_b23r);
-
-    self addmenu("Mob of the Dead Locations", "Mob of the Dead Locations", "main");
-    self addMenuPar("M14", ::diersie_m14);
-    self addMenuPar("PDW", ::dierise_pdw);
-    self addMenuPar("SVU", ::dierise_svu);
-    self addMenuPar("M16", ::dierise_m16);
-    self addMenuPar("AN94", ::dierise_an94);
-    self addMenuPar("MP5", ::dierise_mp5);
-    self addMenuPar("Semtex", ::dierise_semtex);
-    self addMenuPar("B23R", ::dierise_b23r);
-
-    self addmenu("Origins Locations", "Origins Locations", "main");
-    self addMenuPar("M14", ::diersie_m14);
-    self addMenuPar("PDW", ::dierise_pdw);
-    self addMenuPar("SVU", ::dierise_svu);
-    self addMenuPar("M16", ::dierise_m16);
-    self addMenuPar("AN94", ::dierise_an94);
-    self addMenuPar("MP5", ::dierise_mp5);
-    self addMenuPar("Semtex", ::dierise_semtex);
-    self addMenuPar("B23R", ::dierise_b23r);
-
-	
-	self addmenu("Start Round", "Start Round", "main");
-    self addMenuPar("Round 10", ::start_round_10);
-    self addMenuPar("Round 15", ::start_round_15);
-    self addMenuPar("Round 20", ::start_round_20);
-
-	self addmenu("Settings", "Settings", "main");
-    self addMenuPar("Disable Walkers", ::Test);
-
-    
-    
-    // self addmenu("SubMenu3", "SubMenu3", "main");
-    // self addMenuPar("Option", ::Test);
-    // self addMenuPar("Option", ::Test);
-    // self addMenuPar("Option", ::Test);
-    // self addMenuPar("Option", ::Test);
-    
-    // self addmenu("SubMenu4", "SubMenu4", "main");
-    // self addMenuPar("Option", ::Test);
-    // self addMenuPar("Option", ::Test);
-    // self addMenuPar("Option", ::Test);
-    // self addMenuPar("Option", ::Test);
-
-   
-	
-	
-	
-
-	//player options 
-    for( a = 0; a < getplayers().size; a++ )
-    {
-        player = getplayers()[a];
-        self addAbnormalMenu("playerMenu", "Player Menu", "main", getNameNotClan( player )+" Options", ::controlMenu, "newMenu", getNameNotClan( player )+"options");
- 
-        self addAbnormalMenu(getNameNotClan( player )+"options", getNameNotClan( player )+" Options", "playerMenu", "Admin", ::verificationOptions, a, "changeVerification", "admin");
-    }
-}
-
-
-
 
 
 //Menu Position Mover <> by cabcon
@@ -2474,8 +2521,50 @@ start_round_20()
     setDvar( "start_round", 20 );
 }
 
+
 map_restart()
 {
     //setDvar( "map_restart", 1 );
     iPrintLn("map restart");
+}
+
+// Settings
+enable_walkers()
+{
+	setDvar( "walkers", 1 );
+}
+
+disable_walkers()
+{
+	setDvar( "walkers", 0 );
+}
+
+enable_perma_perks()
+{
+	setDvar( "perma_perks", 1 );
+}
+
+disable_perma_perks()
+{
+	setDvar( "perma_perks", 0 );
+}
+
+enable_power()
+{
+	setDvar( "power", 1 );
+}
+
+disable_power()
+{
+	setDvar( "power", 0 );
+}
+
+enable_sallys()
+{
+	setDvar( "sallys", 1 );
+}
+
+disable_sallys()
+{
+	setDvar( "sallys", 0 );
 }
