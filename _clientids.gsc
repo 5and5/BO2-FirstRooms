@@ -41,6 +41,7 @@ init()
 	deleteBuyableDebrisTrigs();
 	thread disable_pers_upgrades();
 	thread kill_start_chest();
+	thread zombiesleft_hud();
 
     level.player_quota = 0;
     level.player_quota_active = 0;
@@ -1095,28 +1096,32 @@ get_current_starting_room()
 
 zombiesleft_hud()
 {   
-	flag_wait( "initial_blackscreen_passed" );
-
-	Remaining = create_simple_hud();
-	Remaining.alignx = "left";
-    Remaining.aligny = "top";
-    Remaining.horzalign = "user_left";
-    Remaining.vertalign = "user_top";
-    Remaining.x += 5;
-    Remaining.y += 2;
-    Remaining.fontscale = 1.5;
-    Remaining.color = ( 0.423, 0.004, 0 );
-	Remaining.alpha = 1;
-    Remaining.hidewheninmenu = 1;
-    Remaining.label = &"Zombies Left: "; 
-
-	while(1)
+	if ( getDvarInt( "zombies_remaining_hud" ) == 1 )
 	{
-		remainingZombies = get_current_zombie_count() + level.zombie_total;
-		Remaining SetValue( remainingZombies );
+		flag_wait( "initial_blackscreen_passed" );
 
-		wait 0.05;
-	}		
+		Remaining = self create_simple_hud();
+		Remaining.alignx = "left";
+		Remaining.aligny = "top";
+		Remaining.horzalign = "user_left";
+		Remaining.vertalign = "user_top";
+		Remaining.x += 5;
+		Remaining.y += 2;
+		Remaining.fontscale = 1.5;
+		Remaining.color = ( 0.423, 0.004, 0 );
+		Remaining.alpha = 1;
+		Remaining.hidewheninmenu = 1;
+		Remaining.label = &"Zombies Left: "; 
+
+		while(1)
+		{
+			remainingZombies = get_current_zombie_count() + level.zombie_total;
+			Remaining SetValue( remainingZombies );
+
+			wait 0.05;
+		}		
+	}
+	
 }
 
 return_to_playable_area_hud()
@@ -1246,10 +1251,15 @@ runMenuIndex( menu )
 
 
 	self addmenu("Settings", "Settings", "main");
+	self addMenuPar("Zombies Remaining", ::controlMenu, "newMenu", "Zombies Remaining");
 	self addMenuPar("Walkers", ::controlMenu, "newMenu", "Walkers");
 	self addMenuPar("Perma Perks", ::controlMenu, "newMenu", "Perma Perks");
 	self addMenuPar("Power", ::controlMenu, "newMenu", "Power");
 	self addMenuPar("Give Sallys", ::controlMenu, "newMenu", "Give Sallys");
+
+	self addmenu("Zombies Remaining", "Zombies Remaining", "main");
+    self addMenuPar("On", ::enable_zombie_remaining);
+    self addMenuPar("Off", ::disable_zombie_remaining);
 
 	self addmenu("Walkers", "Walkers", "main");
     self addMenuPar("On", ::enable_walkers);
@@ -2652,6 +2662,16 @@ map_restart()
 }
 
 // Settings
+enable_zombie_remaining()
+{
+	Sb("Zombies Remaining Hud Enabled");
+	setDvar( "zombies_remaining_hud", 1 );
+}
+disable_zombie_remaining()
+{
+	Sb("Zombies Remaining Hud Disabled");
+	setDvar( "zombies_remaining_hud", 0 );
+}
 enable_walkers()
 {	
 	Sb("Walkers Enabled");
