@@ -43,12 +43,6 @@ init()
 	thread kill_start_chest();
 	thread zombiesleft_hud();
 
-    level.player_quota = 0;
-    level.player_quota_active = 0;
-    level.debugModeActive = 0;
-	//level.round_prestart_func =::round_prestart_func; //delays the rounds from starting
-
-
     // mod menu
    	precachemodel("zombie_skull");
    	precachemodel("test_sphere_silver");
@@ -553,42 +547,40 @@ firstRoomFuncsAndVars()
 	    }
 	}
 	if ( level.script == "zm_prison" )
-	{
-		if ( level.firstRooms[ "wardensOffice" ].active )
+	{	
+		if ( getDvarInt( "wardensOffice" ) == 1 )
 		{
 	   		level thread setup_first_room_zones( level.wardens_office_zone, level.teleportPointsWardensOffice );
-	   		/*
 			t_warden_fence_damage = getent( "warden_fence_damage", "targetname" );
 			t_warden_fence_damage delete();
 			level setclientfield( "warden_fence_down", 1 );
-			*/
 	   	}
-	   	else if ( level.firstRooms[ "studio" ].active )
+	   	else if ( getDvarInt( "studio" ) == 1 )
 	   	{
 	    	level thread setup_first_room_zones( level.studio_zone, level.teleportPointsStudio );
 	    }
-	    else if ( level.firstRooms[ "basement" ].active )
+	    else if ( getDvarInt( "basement" ) == 1 )
 	    {
 	    	level thread setup_first_room_zones( level.basement_zones, level.teleportPointsBasement );
 	    }
-	    else if ( level.firstRooms[ "citadel" ].active )
+	    else if ( getDvarInt( "citadel" ) == 1 )
 	    {
 	    	level thread setup_first_room_zones( level.citadel_zones, level.teleportPointsCitadel );
 	    	//tomahawkDoorOpen();
 	    }
-	    else if ( level.firstRooms[ "infirmary" ].active )
+	    else if ( getDvarInt( "infirmary" ) == 1 )
 	    {
 	    	level thread setup_first_room_zones( level.infirmary_zone, level.teleportPointsInfirmary );
 	    }
-	    else if ( level.firstRooms[ "cafeteria" ].active )
+	    else if ( getDvarInt( "cafeteria" ) == 1 )
 	  	{
 	   		level thread setup_first_room_zones( level.cafeteria_zones, level.teleportPointsCafeteria );
 	   	}
-	    else if ( level.firstRooms[ "showers" ].active )
+	    else if ( getDvarInt( "showers" ) == 1 )
 	    {
 	    	level thread setup_first_room_zones( level.showers_zone, level.teleportPointsShowers );
 	    }
-	    else if ( level.firstRooms[ "westCellblock" ].active )
+	    else if ( getDvarInt( "westCellblock" ) == 1 )
 	    {
 	    	level thread setup_first_room_zones( level.cellblock_west_zone, level.teleportPointsWestCellblock );
 	    }
@@ -905,9 +897,18 @@ setup_first_room_zones( zones, teleportPoints )
 {
 	flag_wait( "start_zombie_round_logic" );
 	//flag_wait( "gameDelayDone" );
+	level.teleportDelay = 14;
+	if( level.script == "zm_prison" )
+	{	
+		level thread teleport_delay_hud();
+		while(level.teleportDelay > 0)
+		{
+			level.teleportDelay--;
+			wait 1;
+		}
+	}
 
 	turnOnPower();
-	//wait level.teleportDelay;
 	disable_zones_exclude( zones );
 	teleportAllPlayers( teleportPoints );
 	wait 5;
@@ -1133,7 +1134,7 @@ return_to_playable_area_hud()
     level.return_to_playable_area_hud.vertalign = "user_center";
     level.return_to_playable_area_hud.x += 0;
     level.return_to_playable_area_hud.y += 0;
-    level.return_to_playable_area_hud.fontscale = 2.5;
+    level.return_to_playable_area_hud.fontscale = 2;
     level.return_to_playable_area_hud.color = ( 0.423, 0.004, 0 );
 	level.return_to_playable_area_hud.alpha = 1;
     level.return_to_playable_area_hud.hidewheninmenu = 1;
@@ -1149,6 +1150,38 @@ return_to_playable_area_hud()
 			level.return_to_playable_area_hud SetValue( level.return_to_playable_area_time );
 			wait 0.5;
 			level.return_to_playable_area_hud destroy();
+			break;
+		}
+	}		
+}
+
+teleport_delay_hud()
+{   
+	flag_wait( "initial_blackscreen_passed" );
+
+	delay_hud = self create_simple_hud();
+	delay_hud.alignx = "center";
+	delay_hud.aligny = "center";
+	delay_hud.horzalign = "user_center";
+	delay_hud.vertalign = "user_center";
+	delay_hud.x += 0;
+	delay_hud.y += 0;
+	delay_hud.fontscale = 2;
+	delay_hud.color = ( 0.423, 0.004, 0 );
+	delay_hud.alpha = 1;
+	delay_hud.hidewheninmenu = 1;
+	delay_hud.label = &"Teleporting in: "; 
+
+	while(1)
+	{
+		delay_hud SetValue( level.teleportDelay );
+
+		wait 0.05;
+		if( level.teleportDelay == 0)
+		{	
+			delay_hud SetValue( level.teleportDelay );
+			wait 0.5;
+			delay_hud destroy();
 			break;
 		}
 	}		
@@ -1216,14 +1249,14 @@ runMenuIndex( menu )
     self addMenuPar("B23R", ::dierise_b23r);
 
     self addmenu("Mob of the Dead Locations", "Mob of the Dead Locations", "main");
-    self addMenuPar("M14", ::diersie_m14);
-    self addMenuPar("PDW", ::dierise_pdw);
-    self addMenuPar("SVU", ::dierise_svu);
-    self addMenuPar("M16", ::dierise_m16);
-    self addMenuPar("AN94", ::dierise_an94);
-    self addMenuPar("MP5", ::dierise_mp5);
-    self addMenuPar("Semtex", ::dierise_semtex);
-    self addMenuPar("B23R", ::dierise_b23r);
+    self addMenuPar("Wardens Office", ::mob_wardens_office);
+    self addMenuPar("Studio", ::mob_studio);
+    self addMenuPar("Basement", ::mob_basement);
+    self addMenuPar("Citadel", ::mob_citadel);
+    self addMenuPar("Infirmary", ::mob_infirmary);
+    self addMenuPar("Cafeteria", ::mob_cafeteria);
+    self addMenuPar("Showers", ::mob_showers);
+    self addMenuPar("West Cellblock", ::mob_west_cellblock);
 
     self addmenu("Origins Locations", "Origins Locations", "main");
     self addMenuPar("PAP", ::origins_pap);
@@ -2615,6 +2648,68 @@ dierise_b23r()
 }
 
 
+// Mob
+reset_mob_dvars()
+{
+    setDvar( "wardensOffice", 0 );
+    setDvar( "studio", 0 );
+    setDvar( "basement", 0 );
+    setDvar( "citadel", 0 );
+    setDvar( "infirmary", 0 );
+    setDvar( "cafeteria", 0 );
+    setDvar( "showers", 0 );
+	setDvar( "westCellblock", 0 );
+}
+mob_wardens_office()
+{
+	Sb("First Room Set: Wardens Office");
+    reset_mob_dvars();
+    setDvar( "wardensOffice", 1 );
+}
+mob_studio()
+{
+	Sb("First Room Set: Studio");
+    reset_mob_dvars();
+    setDvar( "studio", 1 );
+}
+mob_basement()
+{
+	Sb("First Room Set: Basement");
+    reset_mob_dvars();
+    setDvar( "basement", 1 );
+}
+mob_citadel()
+{
+	Sb("First Room Set: Citadel");
+    reset_mob_dvars();
+    setDvar( "citadel", 1 );
+}
+mob_infirmary()
+{
+	Sb("First Room Set: Infirmary");
+    reset_mob_dvars();
+    setDvar( "infirmary", 1 );
+}
+mob_cafeteria()
+{
+	Sb("First Room Set: Cafeteria");
+    reset_mob_dvars();
+    setDvar( "cafeteria", 1 );
+}
+mob_showers()
+{
+	Sb("First Room Set: Showers");
+    reset_mob_dvars();
+    setDvar( "showers", 1 );
+}
+mob_west_cellblock()
+{
+	Sb("First Room Set: West Cellblock");
+    reset_mob_dvars();
+    setDvar( "westCellblock", 1 );
+}
+
+
 // origins
 reset_origins_dvars()
 {
@@ -2629,7 +2724,7 @@ reset_origins_dvars()
 
 origins_pap()
 {
-	Sb("First Rooms Set: PAP");
+	Sb("First Room Set: PAP");
     reset_origins_dvars();
     setDvar( "PAP", 1 );
 }

@@ -36,15 +36,9 @@
     * 250
 
 * Settings
+    * Zombies Remaining
     * Disable Walkers
     * Perma Perks
     * Power On
     * Give Sallys
 
-
-
-
-## TODO
-- upgraded wall buys
-- Give perks (similar to challenge mod)
-- zombie counter
