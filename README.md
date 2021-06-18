@@ -1,6 +1,9 @@
 # BO2-FirstRooms
  A mod that allows players to spawn in different rooms and play a first room challenge
 
+## Download
+[Download](https://www.mediafire.com/file/ddy59wfv2r663oh/BO2-FirstRooms.zip/file)
+
 ## Leaderboards
 [Leaderboards](https://docs.google.com/spreadsheets/d/1eY93xGNydtTuZEoO-EQ-Qwj_ben_gRoHoEOYNFGGhXE/edit#gid=0)
 
@@ -42,3 +45,9 @@
     * Power On
     * Give Sallys
 
+** How to install
+- Copy _clientids.gsc into Plutonuim\t6r\data\maps\mp\gametypes_zm
+
+TODO:
+- fix box not being removed on mob
+- add more maps
