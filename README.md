@@ -49,5 +49,6 @@
 - Copy _clientids.gsc into Plutonuim\t6r\data\maps\mp\gametypes_zm
 
 TODO:
-- fix box not being removed on mob
 - add more maps
+- fix box not being removed on mob
+- fix S() to display for all players

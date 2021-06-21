@@ -766,6 +766,25 @@ watch_for_respawn()
 		wait_network_frame();
 		self setMaxHealth( getDvarInt( "player_health" ) );
 		self.health = getDvarInt( "player_health" );
+
+		// losing pisol fix
+		if( level.script == "zm_tomb" )
+		{
+			if( !self hasweapon( "c96_zm" ) )
+			{
+				self giveWeapon( "c96_zm" );
+				self SwitchToWeapon( "c96_zm" );
+			}
+		}
+		else
+		{
+			if( !self hasweapon( "m1911_zm" ) )
+			{
+				self giveWeapon( "m1911_zm" );
+				self SwitchToWeapon( "m1911_zm" );
+			}
+		}
+
 	}
 }
 
@@ -912,7 +931,11 @@ setup_first_room_zones( zones, teleportPoints )
 	disable_zones_exclude( zones );
 	teleportAllPlayers( teleportPoints );
 	wait 5;
-	player_in_allowed_four_zones_monitor( zones, teleportPoints );
+	players = get_players();
+	for ( i = 0; i < players.size; i++ )
+	{
+		players[i] thread player_in_allowed_four_zones_monitor( zones, teleportPoints );
+	}
 }
 
 teleportAllPlayers( teleportPoints )
@@ -920,7 +943,7 @@ teleportAllPlayers( teleportPoints )
 	players = get_players();
 	for ( i = 0; i < players.size; i++ )
 	{
-		players[ i ] setOrigin( teleportPoints[ i ] );
+		players[ i] setOrigin( teleportPoints[ i ] );
 		wait 0.05;
 	}
 }
@@ -986,8 +1009,9 @@ set_health()
 		setDvar( "player_health", 100 );
 	health = getDvarInt( "player_health" );
 
-	self.maxHealth = health;
-	self.health = self.maxHealth;
+	wait_network_frame();
+	self setMaxHealth( health );
+	self.health = health;
 }
 
 disable_walkers_toggle()
@@ -1009,47 +1033,44 @@ player_in_allowed_four_zones_monitor( zones, teleportPoints )
 	add_to_array( internalFuncZones, internalFuncZones[0], 1 );
 	add_to_array( internalFuncZones, internalFuncZones[0], 1 );
 
-	level.return_to_playable_area_time = 5;
+	self.return_to_playable_area_time = 6;
 
-	level thread return_to_playable_area_hud();
+	self thread return_to_playable_area_hud();
 	while ( 1 )
 	{
-		players = get_players();
-		for ( i = 0; i < players.size; i++ )
-		{
-			if ( players[ i ] get_current_zone() != internalFuncZones[ 0 ] && players[ i ] get_current_zone() != internalFuncZones[ 1 ] && players[ i ] get_current_zone() != internalFuncZones[ 2 ] && players[ i ] get_current_zone() != internalFuncZones[ 3 ] )
+
+		if ( self get_current_zone() != internalFuncZones[ 0 ] && self get_current_zone() != internalFuncZones[ 1 ] && self get_current_zone() != internalFuncZones[ 2 ] && self get_current_zone() != internalFuncZones[ 3 ] )
+		{	
+			self.return_to_playable_area_time--;
+			self.return_to_playable_area_hud.alpha = 1;
+			if( self.return_to_playable_area_time == 0 )
 			{	
-				level.return_to_playable_area_time--;
-				level.return_to_playable_area_hud.alpha = 1;
-				if( level.return_to_playable_area_time == 0 )
-				{	
 
-					if ( get_players().size == 1 && flag( "solo_game" ) && isDefined( self.waiting_to_revive ) && self.waiting_to_revive )
-					{
-						level notify( "end_game" );
-						break;
-					}
-					else
-					{
-						players[ i ] disableinvulnerability();
-						players[ i ].lives = 0;
-						players[ i ] dodamage( players[ i ].health + 1000, players[ i ].origin );
-						players[ i ].bleedout_time = 0;
-					}
-					level.return_to_playable_area_time = 0;
+				if ( get_players().size == 1 && flag( "solo_game" ) && isDefined( self.waiting_to_revive ) && self.waiting_to_revive )
+				{
+					level notify( "end_game" );
+					break;
 				}
-				// if ( level.debugModeActive )
-				// {
-				// 	players[ 0 ] iprintln( "Player teleported at: " + getTime() );
-				// }
-				// players[ i ] setOrigin( teleportPoints[ i ] );
-
+				else
+				{
+					self disableinvulnerability();
+					self.lives = 0;
+					self dodamage( self.health + 1000, self.origin );
+					self.bleedout_time = 0;
+				}
+				self.return_to_playable_area_time = 0;
 			}
-			else{
-				level.return_to_playable_area_time = 5;
-				level.return_to_playable_area_hud.alpha = 0;
-			}		
+			// if ( level.debugModeActive )
+			// {
+			// 	players[ 0 ] iprintln( "Player teleported at: " + getTime() );
+			// }
+			// self setOrigin( teleportPoints[ i ] );
+
 		}
+		else{
+			self.return_to_playable_area_time = 5;
+			self.return_to_playable_area_hud.alpha = 0;
+		}		
 		wait 1;
 	}
 }
@@ -1087,7 +1108,7 @@ get_current_starting_room()
 			if ( level.debugModeActive )
 			{
 				players = get_players();
-				players[ 0 ] iprintln( "Returning Room: " + level.firstRooms[ array[ i ] ].name );
+				//players[ 0 ] iprintln( "Returning Room: " + level.firstRooms[ array[ i ] ].name );
 			}
 			return level.firstRooms[ array[ i ] ].name;
 		}
@@ -1127,29 +1148,29 @@ zombiesleft_hud()
 
 return_to_playable_area_hud()
 {   
-	level.return_to_playable_area_hud = create_simple_hud();
-	level.return_to_playable_area_hud.alignx = "center";
-    level.return_to_playable_area_hud.aligny = "center";
-    level.return_to_playable_area_hud.horzalign = "user_center";
-    level.return_to_playable_area_hud.vertalign = "user_center";
-    level.return_to_playable_area_hud.x += 0;
-    level.return_to_playable_area_hud.y += 0;
-    level.return_to_playable_area_hud.fontscale = 2;
-    level.return_to_playable_area_hud.color = ( 0.423, 0.004, 0 );
-	level.return_to_playable_area_hud.alpha = 1;
-    level.return_to_playable_area_hud.hidewheninmenu = 1;
-    level.return_to_playable_area_hud.label = &"Time to return to playable area: "; 
+	self.return_to_playable_area_hud = self create_simple_hud();
+	self.return_to_playable_area_hud.alignx = "center";
+    self.return_to_playable_area_hud.aligny = "center";
+    self.return_to_playable_area_hud.horzalign = "user_center";
+    self.return_to_playable_area_hud.vertalign = "user_center";
+    self.return_to_playable_area_hud.x += 0;
+    self.return_to_playable_area_hud.y += 0;
+    self.return_to_playable_area_hud.fontscale = 2;
+    self.return_to_playable_area_hud.color = ( 0.423, 0.004, 0 );
+	self.return_to_playable_area_hud.alpha = 1;
+    self.return_to_playable_area_hud.hidewheninmenu = 1;
+    self.return_to_playable_area_hud.label = &"Return to playable area: "; 
 
 	while(1)
 	{
-		level.return_to_playable_area_hud SetValue( level.return_to_playable_area_time );
+		self.return_to_playable_area_hud SetValue( self.return_to_playable_area_time );
 
 		wait 0.05;
-		if( level.return_to_playable_area_time == 0)
+		if( self.return_to_playable_area_time == 0)
 		{	
-			level.return_to_playable_area_hud SetValue( level.return_to_playable_area_time );
+			self.return_to_playable_area_hud SetValue( self.return_to_playable_area_time );
 			wait 0.5;
-			level.return_to_playable_area_hud destroy();
+			self.return_to_playable_area_hud destroy();
 			break;
 		}
 	}		
@@ -1951,7 +1972,7 @@ WelcomeMessage()
 {
  		S("Welcome ^7"+getNameNotClan(self)+ "^7. Press [{+speed_throw}] and [{+melee}]");
  		//S("Made by 5and5 and JezuzLizard");
- 		self PrintMessageToEntry("         ^7BO2 First Rooms Mod! \n^7Made by 5and5 and JezuzLizard");
+ 		self PrintMessageToEntry("          ^7BO2 First Rooms Mod! \n^7Made by 5and5 and JezuzLizard");
  		// 	\n goes down a line :D
 }
 
