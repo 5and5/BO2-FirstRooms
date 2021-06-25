@@ -52,3 +52,5 @@ TODO:
 - add more maps
 - fix box not being removed on mob
 - fix S() to display for all players
+- Limit the amount of zombies for more than 4 players
+- add no boarding option

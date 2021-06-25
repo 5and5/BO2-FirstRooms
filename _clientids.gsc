@@ -475,7 +475,7 @@ initStartingRoomZones()
 	level.m14_die_rise_zone = array( "zone_green_level1" ); 
 	level.pdw_die_rise_zone = array( "zone_green_level2a" );
 	level.svu_die_rise_zone = array( "zone_green_level2b" );
-	level.m16_die_rise_zone = array( "zone_orange_level2" );
+	level.m16_die_rise_zone = array( "zone_orange_level1" );
 	level.an94_dis_rise_zone = array( "zone_orange_level3a" );
 	level.mp5_die_rise_zone = array( "zone_blue_level2b" );
 	level.semtex_die_rise_zones = array( "zone_blue_level1a", "zone_blue_level1c" );
@@ -961,7 +961,7 @@ wallbuy_increase_trigger_radius()
 
 turnOnPower() //by xepixtvx
 {	
-	if( getDvarInt( "walkers") == 1 )
+	if( getDvarInt( "power") == 1 )
 	{
 		if ( level.firstRooms[ "gen3" ].active || level.firstRooms[ "gen5" ].active || level.firstRooms[ "gen2" ].active )
 		{
@@ -1060,15 +1060,10 @@ player_in_allowed_four_zones_monitor( zones, teleportPoints )
 				}
 				self.return_to_playable_area_time = 0;
 			}
-			// if ( level.debugModeActive )
-			// {
-			// 	players[ 0 ] iprintln( "Player teleported at: " + getTime() );
-			// }
-			// self setOrigin( teleportPoints[ i ] );
 
 		}
 		else{
-			self.return_to_playable_area_time = 5;
+			self.return_to_playable_area_time = 6;
 			self.return_to_playable_area_hud.alpha = 0;
 		}		
 		wait 1;
@@ -1148,7 +1143,7 @@ zombiesleft_hud()
 
 return_to_playable_area_hud()
 {   
-	self.return_to_playable_area_hud = self create_simple_hud();
+	self.return_to_playable_area_hud = newClientHudElem( self );
 	self.return_to_playable_area_hud.alignx = "center";
     self.return_to_playable_area_hud.aligny = "center";
     self.return_to_playable_area_hud.horzalign = "user_center";
@@ -1162,18 +1157,18 @@ return_to_playable_area_hud()
     self.return_to_playable_area_hud.label = &"Return to playable area: "; 
 
 	while(1)
-	{
+	{	
 		self.return_to_playable_area_hud SetValue( self.return_to_playable_area_time );
-
 		wait 0.05;
+	
 		if( self.return_to_playable_area_time == 0)
 		{	
 			self.return_to_playable_area_hud SetValue( self.return_to_playable_area_time );
-			wait 0.5;
+			wait 1;
 			self.return_to_playable_area_hud destroy();
 			break;
 		}
-	}		
+	}
 }
 
 teleport_delay_hud()
@@ -1330,6 +1325,9 @@ runMenuIndex( menu )
 	self addmenu("Give Sallys", "Give Sallys", "main");
     self addMenuPar("On", ::enable_sallys);
     self addMenuPar("Off", ::disable_sallys);
+
+    //self addMenuPar("Kill all zombies", ::Test);
+
 
     
     
@@ -1984,6 +1982,7 @@ WelcomeMessage()
 Test()
 {
     self iPrintlnbold("TEST");
+	maps/mp/zombies/_zm_game_module::kill_all_zombies;
 }
 
 
