@@ -44,6 +44,7 @@
     * Perma Perks
     * Power On
     * Give Sallys
+    * Kill Zombies
 
 ** How to install
 - Copy _clientids.gsc into Plutonuim\t6r\data\maps\mp\gametypes_zm

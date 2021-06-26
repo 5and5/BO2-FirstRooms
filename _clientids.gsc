@@ -11,7 +11,6 @@
 
 #include maps\mp\zombies\_zm_perks;
 #include maps\mp\zombies\_zm_zonemgr;
-
 #include maps/mp/_utility;
 #include maps/mp/_visionset_mgr;
 #include maps/mp/_music;
@@ -155,6 +154,7 @@ initializeVars()
 	level.firstRoomsMoTDNamesArray = [];
 	level.firstRoomsBuriedNamesArray = [];
 	level.firstRoomsOriginsNamesArray = [];
+	level.firstRoomsNukeTownNamesArray = [];
 	level.firstRooms = [];
 
 	//starting rooms Die Rise
@@ -249,6 +249,16 @@ initializeVars()
 	level.firstRooms[ "gen5" ] = spawnstruct();
 	level.firstRooms[ "gen5" ].name = "gen5";
 	level.firstRooms[ "gen5" ].active = getDvarIntDefault( "gen5", 0 );
+
+	//starting rooms Nuke Town
+	level.firstRoomsNukeTownNamesArray = array( "SteakoutNukeTown", "B23rNukeTown" );
+	level.firstRooms[ "SteakoutNukeTown" ] = spawnstruct();
+	level.firstRooms[ "SteakoutNukeTown" ].name = "SteakoutNukeTown";
+	level.firstRooms[ "SteakoutNukeTown" ].active = getDvarIntDefault( "SteakoutNukeTown", 0 );
+	level.firstRooms[ "SteakoutNukeTown" ].active = 1;
+	level.firstRooms[ "B23rNukeTown" ] = spawnstruct();
+	level.firstRooms[ "B23rNukeTown" ].name = "B23rNukeTown";
+	level.firstRooms[ "B23rNukeTown" ].active = getDvarIntDefault( "B23rNukeTown", 0 );
 }
 
 initializeTeleportLocations()
@@ -466,7 +476,48 @@ initializeTeleportLocations()
 												( 1860, 3599, -318 ),
 												( 1735, 3413, -293 ),
 												( 1720, 3202, -285 ) );
-	}	
+	}
+
+	
+    if (level.script == "zm_nuked")
+    {
+            // steak out
+            level.teleportPointsSteakoutNukeTown = array( ( 667, 44, -56 ),
+														  ( 619, 186, -56 ),
+														  ( 869, 198, -56 ),
+														  ( 995, 190, -56 ),
+														  ( 1080, 139, 79 ),
+														  ( 765, 76, -56 ),
+														  ( 623, 231, -56 ),
+														  ( 704, 639, -56 ) );
+
+            level.teleportPointsB23rNukeTown = array( ( -589, 281, -56 ),
+													( -525, 534, -56 ),
+													( -746, 385, -56 ),
+													( -906, 405, -56 ),
+													( -919, 651, -56 ),
+													( -831, 630, -56 ),
+													( -733, 511, -56 ),
+													( -845, 682, 80 ) );
+
+			level.teleportPointsM14NukeTown = array( ( -405, 364, -53 ),
+													( -428, 869, -63 ),
+													( -194, 936, -63 ),
+													( 75, 1005, -64 ),
+													( 4, 630, -61 ),
+													( -36, 290, -39 ),
+													( 683, 145, -48 ),
+													( -421, -122, -46 ) );
+
+			level.teleportPointsOlympiaNukeTown = array( ( 236, -471, -60 ),
+														( 70, -123, -63 ),
+														( 474, -67, -60 ),
+														( 245, 347, -49 ),
+														( 596, 534, -25 ),
+														( 570, 866, -92 ),
+														( 269, 956, -71 ),
+														( 233, 647, -61 ) );
+}
 }
 
 initStartingRoomZones()
@@ -501,6 +552,14 @@ initStartingRoomZones()
 	level.gen3_zones = array( "zone_bunker_3b", "zone_bunker_3a" );
 	level.trench_between_gen3_and_start_zones = array( "zone_bunker_1", "zone_bunker_1a", "zone_fire_stairs" );
 	level.gen5_zones = array( "zone_nml_farm", "zone_nml_celllar", "zone_bolt_stairs" );
+
+	//Nuke Town
+	level.yellow_house_nuketown_zone = array( "openhouse2_f1_zone", "openhouse2_f2_zone");
+	level.steakout_nuketown_zone = array( "openhouse2_f1_zone" );
+	level.green_house_nuketown_zone = array( "openhouse1_f1_zone", "openhouse1_f2_zone" );
+	level.b23r_nuketown_zone = array( "openhouse1_f1_zone" );
+	level.m14_nuketown_zone = array( "culdesac_green_zone" );
+	level.olympia_nuketown_zone = array( "culdesac_yellow_zone" );
 	
 }
 
@@ -615,6 +674,49 @@ firstRoomFuncsAndVars()
 	  	{
 	   		level thread setup_first_room_zones( level.gen5_zones, level.teleportPointsStaminup );
 	   	}
+	}
+	if ( level.script == "zm_nuked" )
+	{	
+		if ( getDvarInt( "YellowHouseNukeTown" ) == 1 )
+		{
+	   		level thread setup_first_room_zones( level.yellow_house_nuketown_zone, level.teleportPointsSteakoutNukeTown );
+			//level thread open_door_debris( "zombie_debris", "openhouse2_upstairs_blocker" );
+	   	}
+		else if ( getDvarInt( "SteakoutNukeTown" ) == 1 )
+		{
+	   		level thread setup_first_room_zones( level.steakout_nuketown_zone, level.teleportPointsSteakoutNukeTown );
+	   	}
+		else if ( getDvarInt( "GreenHouseNukeTown" ) == 1 )
+	   	{
+	    	level thread setup_first_room_zones( level.green_house_nuketown_zone, level.teleportPointsB23rNukeTown );
+			level thread open_door_debris( "zombie_door", "door_openhouse1_f2_openhouse1_f1" );
+	    }
+	   	else if ( getDvarInt( "B23rNukeTown" ) == 1 )
+	   	{
+	    	level thread setup_first_room_zones( level.b23r_nuketown_zone, level.teleportPointsB23rNukeTown );
+	    }
+		else if ( getDvarInt( "M14NukeTown" ) == 1 )
+	   	{
+	    	level thread setup_first_room_zones( level.m14_nuketown_zone, level.teleportPointsM14NukeTown );
+	    }
+		else if ( getDvarInt( "OlympiaNukeTown" ) == 1 )
+	   	{
+	    	level thread setup_first_room_zones( level.olympia_nuketown_zone, level.teleportPointsOlympiaNukeTown );
+	    }
+	}
+}
+
+open_door_debris( type, name )
+{	
+	flag_wait( "initial_blackscreen_passed" );
+
+	zombie_doors = getEntArray( type, "targetname" );
+	foreach ( door in zombie_doors )
+	{
+		if ( door.target == name )
+		{	
+			door notify( "trigger", get_players()[0], 1 );
+		}
 	}
 }
 
@@ -874,42 +976,28 @@ disable_zones_exclude( zones_exclude )
 
 deleteBuyableDebrisTrigs()
 {
-	/*
-    debris_trigs = getentarray( "zombie_debris", "targetname" );
-    _a41 = debris_trigs;
-    _k41 = getFirstArrayKey( _a41 );
-    while ( isDefined( _k41 ) )
-    {
-        debris = _a41[ _k41 ];
-        debris self_delete();
-        _k41 = getNextArrayKey( _a41, _k41 );
-    }
-    */
-    debris_trigs = getentarray( "zombie_debris", "targetname" );
-    foreach ( debris_trig in debris_trigs )
-    {
-    	 debris_trig self_delete();
-    }
+		debris_trigs = getentarray( "zombie_debris", "targetname" );
+		foreach ( debris_trig in debris_trigs )
+		{	
+			if (debris_trig.target == "openhouse2_upstairs_blocker") //nuked
+			{
+				continue;
+			}
+			debris_trig self_delete();
+		}
 }
 
 deleteBuyableDoorsTrigs()
 {
-	/*
-    zombie_doors = getentarray( "zombie_door", "targetname" );
-    _a41 = zombie_doors;
-    _k41 = getFirstArrayKey( _a41 );
-    while ( isDefined( _k41 ) )
-    {
-        door = _a41[ _k41 ];
-        door self_delete();
-        _k41 = getNextArrayKey( _a41, _k41 );
-    }
-    */
-    zombie_doors = getentarray( "zombie_door", "targetname" );
-    foreach ( zombie_door in zombie_doors )
-    {
-    	zombie_door self_delete();
-    }
+		zombie_doors = getentarray( "zombie_door", "targetname" );
+		foreach ( zombie_door in zombie_doors )
+		{	
+			if (zombie_door.target == "door_openhouse1_f2_openhouse1_f1") //nuked
+			{
+				continue;
+			}
+			zombie_door self_delete();
+		}
 }
 
 setup_first_room_zones( zones, teleportPoints )
@@ -1084,6 +1172,9 @@ get_current_starting_room()
     	case "tomb":
     		array = level.firstRoomsOriginsNamesArray;
     		break;
+		case "nuked":
+    		array = level.firstRoomsNukeTownNamesArray;
+    		break;
     	default:
 	}
 
@@ -1253,6 +1344,7 @@ runMenuIndex( menu )
     self addMenuPar("Die Rise", ::controlMenu, "newMenu", "Die Rise Locations");
     self addMenuPar("Mob of the Dead", ::controlMenu, "newMenu", "Mob of the Dead Locations");
     self addMenuPar("Origins", ::controlMenu, "newMenu", "Origins Locations");
+	self addMenuPar("Nuke Town", ::controlMenu, "newMenu", "Nuke Town Locations");
 
     self addmenu("Die Rise Locations", "Die Rise Locations", "main");
     self addMenuPar("M14", ::diersie_m14);
@@ -1283,12 +1375,21 @@ runMenuIndex( menu )
     self addMenuPar("Gen 3 Trench", ::origins_gen3Trench);
     self addMenuPar("Gen 5", ::origins_gen5);
 
+	self addmenu("Nuke Town Locations", "Nuke Town Locations", "main");
+	self addMenuPar("Green House", ::nuketown_green_house);
+    self addMenuPar("Steakout", ::nuketown_steakout);
+	self addMenuPar("Yellow House", ::nuketown_yellow_house);
+    self addMenuPar("B23R", ::nuketown_b23r);
+	self addMenuPar("M14", ::nuketown_m14);
+	self addMenuPar("Olympia", ::nuketown_olympia);
+
 
 	
 	self addmenu("Start Round", "Start Round", "main");
-    self addMenuPar("Round 10", ::start_round_10);
+	 self addMenuPar("Round 10", ::start_round_10);
     self addMenuPar("Round 15", ::start_round_15);
     self addMenuPar("Round 20", ::start_round_20);
+
 
 
 	self addmenu("Player Health", "Player Health", "main");
@@ -1305,6 +1406,7 @@ runMenuIndex( menu )
 	self addMenuPar("Perma Perks", ::controlMenu, "newMenu", "Perma Perks");
 	self addMenuPar("Power", ::controlMenu, "newMenu", "Power");
 	self addMenuPar("Give Sallys", ::controlMenu, "newMenu", "Give Sallys");
+	self addMenuPar("Kill Zombies", ::kill_zombies);
 
 	self addmenu("Zombies Remaining", "Zombies Remaining", "main");
     self addMenuPar("On", ::enable_zombie_remaining);
@@ -1325,8 +1427,6 @@ runMenuIndex( menu )
 	self addmenu("Give Sallys", "Give Sallys", "main");
     self addMenuPar("On", ::enable_sallys);
     self addMenuPar("Off", ::disable_sallys);
-
-    //self addMenuPar("Kill all zombies", ::Test);
 
 
     
@@ -1981,8 +2081,7 @@ WelcomeMessage()
 
 Test()
 {
-    self iPrintlnbold("TEST");
-	maps/mp/zombies/_zm_game_module::kill_all_zombies;
+	maps/mp/zombies/_zm_game_module::kill_all_zombies();
 }
 
 
@@ -2198,11 +2297,19 @@ S(i)
 		i="^1In the Alpha Version is the "+getOptionName()+" not possible !";
 	self iprintln(i);
 }
+Sa(i)
+{
+	iprintln(i);
+}
 Sb(i)
 {
 	if(i=="ar")
 		i="^1In the Alpha Version is the "+getOptionName()+" not possible !";
 	self iprintlnbold(i);
+}
+Sba(i)
+{
+	iPrintLnBold(i);
 }
 L(i)
 {
@@ -2620,49 +2727,49 @@ reset_dierise_dvars()
 
 diersie_m14()
 {
-	Sb("First Rooms Set: M14");
+	Sba("First Room Set: M14");
     reset_dierise_dvars();
     setDvar( "m14DieRise", 1 );
 }
 dierise_pdw()
 {
-	Sb("First Rooms Set: Pdw");
+	Sba("First Room Set: Pdw");
     reset_dierise_dvars();
     setDvar( "pdwDieRise", 1 );
 }
 dierise_svu()
 {
-	Sb("First Rooms Set: Svu");
+	Sba("First Room Set: Svu");
     reset_dierise_dvars();
     setDvar( "svuDieRise", 1 );
 }
 dierise_m16()
 {
-	Sb("First Rooms Set: m16");
+	Sba("First Room Set: m16");
     reset_dierise_dvars();
     setDvar( "m16DieRise", 1 );
 }
 dierise_an94()
 {
-	Sb("First Rooms Set: AN94");
+	Sba("First Room Set: AN94");
     reset_dierise_dvars();
     setDvar( "an94DieRise", 1 );
 }
 dierise_mp5()
 {
-	Sb("First Rooms Set: Mp5");
+	Sba("First Room Set: Mp5");
     reset_dierise_dvars();
     setDvar( "mp5DieRise", 1 );
 }
 dierise_semtex()
 {
-	Sb("First Rooms Set: Semtex");
+	Sba("First Room Set: Semtex");
     reset_dierise_dvars();
     setDvar( "semtexDieRise", 1 );
 }
 dierise_b23r()
 {
-	Sb("First Rooms Set: B23r");
+	Sba("First Room Set: B23r");
     reset_dierise_dvars();
     setDvar( "b23rDieRise", 1 );
 }
@@ -2682,49 +2789,49 @@ reset_mob_dvars()
 }
 mob_wardens_office()
 {
-	Sb("First Room Set: Wardens Office");
+	Sba("First Room Set: Wardens Office");
     reset_mob_dvars();
     setDvar( "wardensOffice", 1 );
 }
 mob_studio()
 {
-	Sb("First Room Set: Studio");
+	Sba("First Room Set: Studio");
     reset_mob_dvars();
     setDvar( "studio", 1 );
 }
 mob_basement()
 {
-	Sb("First Room Set: Basement");
+	Sba("First Room Set: Basement");
     reset_mob_dvars();
     setDvar( "basement", 1 );
 }
 mob_citadel()
 {
-	Sb("First Room Set: Citadel");
+	Sba("First Room Set: Citadel");
     reset_mob_dvars();
     setDvar( "citadel", 1 );
 }
 mob_infirmary()
 {
-	Sb("First Room Set: Infirmary");
+	Sba("First Room Set: Infirmary");
     reset_mob_dvars();
     setDvar( "infirmary", 1 );
 }
 mob_cafeteria()
 {
-	Sb("First Room Set: Cafeteria");
+	Sba("First Room Set: Cafeteria");
     reset_mob_dvars();
     setDvar( "cafeteria", 1 );
 }
 mob_showers()
 {
-	Sb("First Room Set: Showers");
+	Sba("First Room Set: Showers");
     reset_mob_dvars();
     setDvar( "showers", 1 );
 }
 mob_west_cellblock()
 {
-	Sb("First Room Set: West Cellblock");
+	Sba("First Room Set: West Cellblock");
     reset_mob_dvars();
     setDvar( "westCellblock", 1 );
 }
@@ -2744,66 +2851,120 @@ reset_origins_dvars()
 
 origins_pap()
 {
-	Sb("First Room Set: PAP");
+	Sba("First Room Set: PAP");
     reset_origins_dvars();
     setDvar( "PAP", 1 );
 }
 origins_middleBunker()
 {
-	Sb("First Rooms Set: Middle Bunker");
+	Sba("First Room Set: Middle Bunker");
     reset_origins_dvars();
     setDvar( "middleBunker", 1 );
 }
 origins_gen2()
 {
-	Sb("First Rooms Set: Gen 2");
+	Sba("First Room Set: Gen 2");
     reset_origins_dvars();
     setDvar( "gen2", 1 );
 }
 origins_gen2Trench()
 {
-	Sb("First Rooms Set: Gen 2 Trench");
+	Sba("First Room Set: Gen 2 Trench");
     reset_origins_dvars();
     setDvar( "gen2Trench", 1 );
 }
 origins_gen3()
 {
-	Sb("First Rooms Set: Gen 3");
+	Sba("First Room Set: Gen 3");
     reset_origins_dvars();
     setDvar( "gen3", 1 );
 }
 origins_gen3Trench()
 {
-	Sb("First Rooms Set: Gen 3 Trench");
+	Sba("First Room Set: Gen 3 Trench");
     reset_origins_dvars();
     setDvar( "gen3Trench", 1 );
 }
 origins_gen5()
 {
-	Sb("First Rooms Set: Gen 5");
+	Sba("First Room Set: Gen 5");
     reset_origins_dvars();
     setDvar( "gen5", 1 );
 }
 
 
+//Nuke Town
+reset_nuketown_dvars()
+{	
+	setDvar( "GreenHouseNukeTown", 0 );
+    setDvar( "SteakoutNukeTown", 0 );
+	setDvar( "YellowHouseNukeTown", 0 );
+    setDvar( "B23rNukeTown", 0 );
+	setDvar( "M14NukeTown", 0 );
+	setDvar( "OlympiaNukeTown", 0 );
+}
+
+nuketown_green_house()
+{
+	Sba("First Room Set: Green House");
+    reset_nuketown_dvars();
+    setDvar( "GreenHouseNukeTown", 1 );
+}
+nuketown_steakout()
+{
+	Sba("First Room Set: Steakout");
+    reset_nuketown_dvars();
+    setDvar( "SteakoutNukeTown", 1 );
+}
+nuketown_yellow_house()
+{
+	Sba("First Room Set: Yellow House");
+    reset_nuketown_dvars();
+    setDvar( "YellowHouseNukeTown", 1 );
+}
+nuketown_b23r()
+{
+	Sba("First Room Set: B23R");
+    reset_nuketown_dvars();
+    setDvar( "B23rNukeTown", 1 );
+}
+nuketown_m14()
+{
+	Sba("First Room Set: M14");
+    reset_nuketown_dvars();
+    setDvar( "M14NukeTown", 1 );
+}
+nuketown_olympia()
+{
+	Sba("First Room Set: Olympia");
+    reset_nuketown_dvars();
+    setDvar( "OlympiaNukeTown", 1 );
+}
+
+
 // start rounds
+set_start_round( round_number )
+{	
+	text = "Start Round Set: " + round_number;
+	Sba( text );
+    setDvar( "start_round", int(round_number) );
+
+}
 start_round_10()
 {
-    Sb("Start Round Set: 10");
+    Sba("Start Round Set: 10");
     setDvar( "start_round", 10 );
 }
 start_round_15()
 {
-    Sb("Start Round Set: 15");
+    Sba("Start Round Set: 15");
     setDvar( "start_round", 15 );
 }
 start_round_20()
 {
-    Sb("Start Round Set: 20");
+    Sba("Start Round Set: 20");
     setDvar( "start_round", 20 );
 }
-
-
 
 // player health
 player_health_100()
@@ -2837,51 +2998,57 @@ map_restart()
 // Settings
 enable_zombie_remaining()
 {
-	Sb("Zombies Remaining Hud Enabled");
+	Sba("Zombies Remaining Hud Enabled");
 	setDvar( "zombies_remaining_hud", 1 );
 }
 disable_zombie_remaining()
 {
-	Sb("Zombies Remaining Hud Disabled");
+	Sba("Zombies Remaining Hud Disabled");
 	setDvar( "zombies_remaining_hud", 0 );
 }
 enable_walkers()
 {	
-	Sb("Walkers Enabled");
+	Sba("Walkers Enabled");
 	setDvar( "walkers", 1 );
 }
 disable_walkers()
 {	
-	Sb("Walkers Disabled");
+	Sba("Walkers Disabled");
 	setDvar( "walkers", 0 );
 }
 enable_perma_perks()
 {	
-	Sb("Perma Perks Enabled");
+	Sba("Perma Perks Enabled");
 	setDvar( "perma_perks", 1 );
 }
 disable_perma_perks()
 {	
-	Sb("Perma Perk Disabled");
+	Sba("Perma Perk Disabled");
 	setDvar( "perma_perks", 0 );
 }
 enable_power()
 {	
-	Sb("Power Enabled");
+	Sba("Power Enabled");
 	setDvar( "power", 1 );
 }
 disable_power()
 {
-	Sb("Power Disabled");
+	Sba("Power Disabled");
 	setDvar( "power", 0 );
 }
 enable_sallys()
 {
-	Sb("M1911 Replaced with Sallys");
+	Sba("M1911 Replaced with Sallys");
 	setDvar( "sallys", 1 );
 }
 disable_sallys()
 {
-	Sb("M1911 Restored");
+	Sba("M1911 Restored");
 	setDvar( "sallys", 0 );
+}
+
+kill_zombies()
+{	
+	Sba("Killed Zombies");
+	maps/mp/zombies/_zm_game_module::kill_all_zombies();
 }
