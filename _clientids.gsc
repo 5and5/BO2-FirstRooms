@@ -481,43 +481,145 @@ initializeTeleportLocations()
 	
     if (level.script == "zm_nuked")
     {
-            // steak out
-            level.teleportPointsSteakoutNukeTown = array( ( 667, 44, -56 ),
-														  ( 619, 186, -56 ),
-														  ( 869, 198, -56 ),
-														  ( 995, 190, -56 ),
-														  ( 1080, 139, 79 ),
-														  ( 765, 76, -56 ),
-														  ( 623, 231, -56 ),
-														  ( 704, 639, -56 ) );
+		// steak out
+		level.teleportPointsSteakoutNukeTown = array( ( 667, 44, -56 ),
+														( 619, 186, -56 ),
+														( 869, 198, -56 ),
+														( 995, 190, -56 ),
+														( 1080, 139, 79 ),
+														( 765, 76, -56 ),
+														( 623, 231, -56 ),
+														( 704, 639, -56 ) );
 
-            level.teleportPointsB23rNukeTown = array( ( -589, 281, -56 ),
-													( -525, 534, -56 ),
-													( -746, 385, -56 ),
-													( -906, 405, -56 ),
-													( -919, 651, -56 ),
-													( -831, 630, -56 ),
-													( -733, 511, -56 ),
-													( -845, 682, 80 ) );
+		level.teleportPointsB23rNukeTown = array( ( -589, 281, -56 ),
+												( -525, 534, -56 ),
+												( -746, 385, -56 ),
+												( -906, 405, -56 ),
+												( -919, 651, -56 ),
+												( -831, 630, -56 ),
+												( -733, 511, -56 ),
+												( -845, 682, 80 ) );
 
-			level.teleportPointsM14NukeTown = array( ( -405, 364, -53 ),
-													( -428, 869, -63 ),
-													( -194, 936, -63 ),
-													( 75, 1005, -64 ),
-													( 4, 630, -61 ),
-													( -36, 290, -39 ),
-													( 683, 145, -48 ),
-													( -421, -122, -46 ) );
+		level.teleportPointsM14NukeTown = array( ( -405, 364, -53 ),
+												( -428, 869, -63 ),
+												( -194, 936, -63 ),
+												( 75, 1005, -64 ),
+												( 4, 630, -61 ),
+												( -36, 290, -39 ),
+												( 683, 145, -48 ),
+												( -421, -122, -46 ) );
 
-			level.teleportPointsOlympiaNukeTown = array( ( 236, -471, -60 ),
-														( 70, -123, -63 ),
-														( 474, -67, -60 ),
-														( 245, 347, -49 ),
-														( 596, 534, -25 ),
-														( 570, 866, -92 ),
-														( 269, 956, -71 ),
-														( 233, 647, -61 ) );
-}
+		level.teleportPointsOlympiaNukeTown = array( ( 236, -471, -60 ),
+													( 70, -123, -63 ),
+													( 474, -67, -60 ),
+													( 245, 347, -49 ),
+													( 596, 534, -25 ),
+													( 570, 866, -92 ),
+													( 269, 956, -71 ),
+													( 233, 647, -61 ) );
+	}
+
+	if (level.script == "zm_buried")
+    {
+        level.teleportPointsSaloonBuried = array( ( 879, -1175, 56 ),
+												( 619, 186, -56 ),
+												( 869, 198, -56 ),
+												( 995, 190, -56 ),
+												( 1080, 139, 79 ),
+												( 765, 76, -56 ),
+												( 623, 231, -56 ),
+												( 704, 639, -56 ) );
+
+		level.teleportPointsCandyStoreBuried = array( ( 652, -168, 8 ),
+													( 619, 186, -56 ),
+													( 869, 198, -56 ),
+													( 995, 190, -56 ),
+													( 1080, 139, 79 ),
+													( 765, 76, -56 ),
+													( 623, 231, -56 ),
+													( 704, 639, -56 ) );
+
+		level.teleportPointsCourtHouseBuried = array( ( 215, 647, 8 ),
+													( 619, 186, -56 ),
+													( 869, 198, -56 ),
+													( 995, 190, -56 ),
+													( 1080, 139, 79 ),
+													( 765, 76, -56 ),
+													( 623, 231, -56 ),
+													( 704, 639, -56 ) );
+
+		level.teleportPointsBankBuried = array( ( -475, -369, 8 ),
+												( -475, 186, -56 ),
+												( 869, 198, -56 ),
+												( 995, 190, -56 ),
+												( 1080, 139, 79 ),
+												( 765, 76, -56 ),
+												( 623, 231, -56 ),
+												( 704, 639, -56 ) );
+
+		level.teleportPointsGeneralStoreBuried = array( ( 222, 17, 11 ),
+														( -475, 186, -56 ),
+														( 869, 198, -56 ),
+														( 995, 190, -56 ),
+														( 1080, 139, 79 ),
+														( 765, 76, -56 ),
+														( 623, 231, -56 ),
+														( 704, 639, -56 ) );
+
+		level.teleportPointsWitchesHouseBuried = array( ( 2234, 553, 103 ),
+														( -475, 186, -56 ),
+														( 869, 198, -56 ),
+														( 995, 190, -56 ),
+														( 1080, 139, 79 ),
+														( 765, 76, -56 ),
+														( 623, 231, -56 ),
+														( 704, 639, -56 ) );
+
+		level.teleportPointsWitchesHouseBackyardBuried = array( ( 3458, 267, 50 ),
+														( -475, 186, -56 ),
+														( 869, 198, -56 ),
+														( 995, 190, -56 ),
+														( 1080, 139, 79 ),
+														( 765, 76, -56 ),
+														( 623, 231, -56 ),
+														( 704, 639, -56 ) );
+
+		level.teleportPointsMazeBuried = array( ( 5070, 702, 15 ),
+												( -475, 186, -56 ),
+												( 869, 198, -56 ),
+												( 995, 190, -56 ),
+												( 1080, 139, 79 ),
+												( 765, 76, -56 ),
+												( 623, 231, -56 ),
+												( 704, 639, -56 ) );
+
+		level.teleportPointsInfrontChruchBuried = array( ( 1303, 1299, 16 ),
+														( -475, 186, -56 ),
+														( 869, 198, -56 ),
+														( 995, 190, -56 ),
+														( 1080, 139, 79 ),
+														( 765, 76, -56 ),
+														( 623, 231, -56 ),
+														( 704, 639, -56 ) );
+
+		level.teleportPointsChurchBuried = array( ( 1358, 1466, 16 ),
+												( -475, 186, -56 ),
+												( 869, 198, -56 ),
+												( 995, 190, -56 ),
+												( 1080, 139, 79 ),
+												( 765, 76, -56 ),
+												( 623, 231, -56 ),
+												( 704, 639, -56 ) );
+
+		level.teleportPointsBeltBuried = array( ( -2717, -120, 1224 ),
+												( -475, 186, -56 ),
+												( 869, 198, -56 ),
+												( 995, 190, -56 ),
+												( 1080, 139, 79 ),
+												( 765, 76, -56 ),
+												( 623, 231, -56 ),
+												( 704, 639, -56 ) );
+	}
 }
 
 initStartingRoomZones()
@@ -560,7 +662,19 @@ initStartingRoomZones()
 	level.b23r_nuketown_zone = array( "openhouse1_f1_zone" );
 	level.m14_nuketown_zone = array( "culdesac_green_zone" );
 	level.olympia_nuketown_zone = array( "culdesac_yellow_zone" );
-	
+
+	//Buried
+	level.saloon_buried_zone = array( "zone_underground_bar" );
+	level.candy_store_buried_zone = array( "zone_toy_store", "zone_candy_store" );
+	level.court_house_buried_zone = array( "zone_underground_courthouse" );
+	level.bank_buried_zone = array( "zone_bank" );
+	level.general_store_buried_zone = array( "zone_general_store" );
+	level.witches_house_buried_zone = array( "zone_mansion_lawn" );
+	level.witches_house_backyard_buried_zone = array( "zone_mansion_backyard" );
+	level.maze_buried_zone = array( "zone_maze" );
+	level.infront_chruch_buried_zone = array( "zone_church_graveyard" );
+	level.church_buried_zone = array( "zone_church_main" );
+	level.belt_buried_zone = array( "zone_start_lower" );
 }
 
 firstRoomFuncsAndVars()
@@ -704,6 +818,53 @@ firstRoomFuncsAndVars()
 	    	level thread setup_first_room_zones( level.olympia_nuketown_zone, level.teleportPointsOlympiaNukeTown );
 	    }
 	}
+	if ( level.script == "zm_buried" )
+	{	
+		if ( getDvarInt( "SaloonBuried" ) == 1 )
+		{	
+			level thread setup_first_room_zones( level.saloon_buried_zone, level.teleportPointsSaloonBuried );
+	    }
+		else if ( getDvarInt( "CandyStoreBuried" ) == 1 )
+		{	
+			level thread setup_first_room_zones( level.candy_store_buried_zone, level.teleportPointsCandyStoreBuried );
+	    }
+		else if ( getDvarInt( "CourtHouseBuried" ) == 1 )
+		{	
+			level thread setup_first_room_zones( level.court_house_buried_zone, level.teleportPointsCourtHouseBuried );
+	    }
+		else if ( getDvarInt( "BankBuried" ) == 1 )
+		{	
+			level thread setup_first_room_zones( level.bank_buried_zone, level.teleportPointsBankBuried );
+	    }
+		else if ( getDvarInt( "GerenalStoreBuried" ) == 1 )
+		{	
+			level thread setup_first_room_zones( level.general_store_buried_zone, level.teleportPointsGeneralStoreBuried );
+	    }
+		else if ( getDvarInt( "WitchesHouseBuried" ) == 1 )
+		{	
+			level thread setup_first_room_zones( level.witches_house_buried_zone, level.teleportPointsWitchesHouseBuried );
+	    }
+		else if ( getDvarInt( "WitchesHouseBackyardBuried" ) == 1 )
+		{	
+			level thread setup_first_room_zones( level.witches_house_backyard_buried_zone, level.teleportPointsWitchesHouseBackyardBuried );
+	    }		
+		else if ( getDvarInt( "MazeBuried" ) == 1 )
+		{	
+			level thread setup_first_room_zones( level.maze_buried_zone, level.teleportPointsMazeBuried );
+	    }
+		else if ( getDvarInt( "InfrontChruchBuried" ) == 1 )
+		{	
+			level thread setup_first_room_zones( level.infront_chruch_buried_zone, level.teleportPointsInfrontChruchBuried );
+	    }
+		else if ( getDvarInt( "ChurchBuried" ) == 1 )
+		{	
+			level thread setup_first_room_zones( level.church_buried_zone, level.teleportPointsChurchBuried );
+	    }
+		else if ( getDvarInt( "BeltBuried" ) == 1 )
+		{	
+			level thread setup_first_room_zones( level.belt_buried_zone, level.teleportPointsBeltBuried );
+	    }
+	}
 }
 
 open_door_debris( type, name )
@@ -746,7 +907,7 @@ starting_round()
 
 set_points()
 {
-    self.score = 2000;
+    self.score = 2500;
 }
 
 set_movement_dvars()
@@ -754,6 +915,10 @@ set_movement_dvars()
     setdvar( "player_backSpeedScale", 1 );
     setdvar( "player_strafeSpeedScale", 1 );
     setdvar( "player_sprintStrafeSpeedScale", 1 );
+
+	// setdvar( "dtp_post_move_pause", 0 );
+	// setdvar( "dtp_exhaustion_window", 100 );
+	// setdvar( "dtp_startup_delay", 100 );
 }
 
 round_prestart_func() //this function is necessary for certain maps with custom round logic
@@ -1169,6 +1334,9 @@ get_current_starting_room()
     	case "prison":
     		array = level.firstRoomsMoTDNamesArray;
     		break;
+		case "buried":
+    		array = level.firstRoomsBuriedNamesArray;
+    		break;
     	case "tomb":
     		array = level.firstRoomsOriginsNamesArray;
     		break;
@@ -1344,6 +1512,7 @@ runMenuIndex( menu )
     self addMenuPar("Die Rise", ::controlMenu, "newMenu", "Die Rise Locations");
     self addMenuPar("Mob of the Dead", ::controlMenu, "newMenu", "Mob of the Dead Locations");
     self addMenuPar("Origins", ::controlMenu, "newMenu", "Origins Locations");
+	self addMenuPar("Buried", ::controlMenu, "newMenu", "Buried Locations");
 	self addMenuPar("Nuke Town", ::controlMenu, "newMenu", "Nuke Town Locations");
 
     self addmenu("Die Rise Locations", "Die Rise Locations", "main");
@@ -1365,6 +1534,19 @@ runMenuIndex( menu )
     self addMenuPar("Cafeteria", ::mob_cafeteria);
     self addMenuPar("Showers", ::mob_showers);
     self addMenuPar("West Cellblock", ::mob_west_cellblock);
+
+	self addmenu("Buried Locations", "Buried Locations", "main");
+    self addMenuPar("Saloon", ::buried_saloon);
+    self addMenuPar("Candy Store", ::buried_candy_store);
+	self addMenuPar("Court House", ::buried_court_house);
+	self addMenuPar("Bank", ::buried_bank);
+	self addMenuPar("Gerenal Store", ::buried_gerenal_store);
+	self addMenuPar("Witches House", ::buried_witches_house);
+	self addMenuPar("Witches House Backyard", ::buried_witches_house_backyard);
+	self addMenuPar("Maze", ::buried_maze);
+	self addMenuPar("Infront of Church", ::buried_infront_chruch);
+	self addMenuPar("Church", ::buried_church);
+	self addMenuPar("Conveyor Belt", ::buried_belt);
 
     self addmenu("Origins Locations", "Origins Locations", "main");
     self addMenuPar("PAP", ::origins_pap);
@@ -2712,7 +2894,7 @@ updateMenu_color_system_Map(i)
 ////////////////////////////////////////////////////////////////////////////
 
 // maps
-
+// die rise
 reset_dierise_dvars()
 {
     setDvar( "m14DieRise", 0 );
@@ -2834,6 +3016,89 @@ mob_west_cellblock()
 	Sba("First Room Set: West Cellblock");
     reset_mob_dvars();
     setDvar( "westCellblock", 1 );
+}
+
+
+// Buried
+reset_buried_dvars()
+{
+    setDvar( "SaloonBuried", 0 );
+    setDvar( "CandyStoreBuried", 0 );
+	setDvar( "CourtHouseBuried", 0 );
+	setDvar( "BankBuried", 0 );
+	setDvar( "GerenalStoreBuried", 0 );
+	setDvar( "WitchesHouseBuried", 0 );
+	setDvar( "WitchesHouseBackyardBuried", 0 );
+	setDvar( "MazeBuried", 0 );
+	setDvar( "InfrontChruchBuried", 0 );
+	setDvar( "ChurchBuried", 0 );
+	setDvar( "BeltBuried", 0 );
+}
+buried_saloon()
+{
+	Sba("First Room Set: Saloon");
+    reset_buried_dvars();
+    setDvar( "SaloonBuried", 1 );
+}
+buried_candy_store()
+{
+	Sba("First Room Set: Candy Store");
+    reset_buried_dvars();
+    setDvar( "CandyStoreBuried", 1 );
+}
+buried_court_house()
+{
+	Sba("First Room Set: Court House");
+    reset_buried_dvars();
+    setDvar( "CourtHouseBuried", 1 );
+}
+buried_bank()
+{
+	Sba("First Room Set: Bank");
+    reset_buried_dvars();
+    setDvar( "BankBuried", 1 );
+}
+buried_gerenal_store()
+{
+	Sba("First Room Set: Gerenal Store");
+    reset_buried_dvars();
+    setDvar( "GerenalStoreBuried", 1 );
+}
+buried_witches_house()
+{
+	Sba("First Room Set: Witches House");
+    reset_buried_dvars();
+    setDvar( "WitchesHouseBuried", 1 );
+}
+buried_witches_house_backyard()
+{
+	Sba("First Room Set: Witches House Backyard");
+    reset_buried_dvars();
+    setDvar( "WitchesHouseBackyardBuried", 1 );
+}
+buried_maze()
+{
+	Sba("First Room Set: Maze");
+    reset_buried_dvars();
+    setDvar( "MazeBuried", 1 );
+}
+buried_infront_chruch()
+{
+	Sba("First Room Set: Infront of Church");
+    reset_buried_dvars();
+    setDvar( "InfrontChruchBuried", 1 );
+}
+buried_church()
+{
+	Sba("First Room Set: Church");
+    reset_buried_dvars();
+    setDvar( "ChurchBuried", 1 );
+}
+buried_belt()
+{
+	Sba("First Room Set: Conveyor Belt");
+    reset_buried_dvars();
+    setDvar( "BeltBuried", 1 );
 }
 
 
@@ -2969,31 +3234,25 @@ start_round_20()
 // player health
 player_health_100()
 {
-	Sb("Health Set: 100");
+	Sba("Health Set: 100");
     setDvar( "player_health", 100 );
 }
 player_health_150()
 {
-	Sb("Health Set: 150");
+	Sba("Health Set: 150");
     setDvar( "player_health", 150 );
 }
 player_health_200()
 {
-	Sb("Health Set: 200");
+	Sba("Health Set: 200");
     setDvar( "player_health", 200 );
 }
 player_health_250()
 {
-	Sb("Health Set: 250");
+	Sba("Health Set: 250");
     setDvar( "player_health", 250 );
 }
 
-
-map_restart()
-{
-    //setDvar( "map_restart", 1 );
-    Sb("map restart");
-}
 
 // Settings
 enable_zombie_remaining()
