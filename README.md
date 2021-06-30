@@ -53,7 +53,6 @@
 TODO:
 - add tranzit
 - add option of return to playable area
-- fix losing pistol func
 - fix connecting zones
 - open door on nuketown
 - fix box not being removed on mob

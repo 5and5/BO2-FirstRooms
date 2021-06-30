@@ -29,18 +29,10 @@
 
 
 init()
-{
-	//initializeVars();
-	firstRoomFuncsAndVars();
-	starting_round();
-    disable_walkers_toggle();
-	disable_carpenter();
-	wallbuy_increase_trigger_radius();
-	deleteBuyableDoorsTrigs();
-	deleteBuyableDebrisTrigs();
-	thread disable_pers_upgrades();
-	thread kill_start_chest();
-	thread zombiesleft_hud();
+{	
+	// first room mod
+	initFirstRoomFuncsAndVars();
+	initFunctions();
 
     // mod menu
    	precachemodel("zombie_skull");
@@ -91,6 +83,7 @@ onPlayerSpawned()
 			self set_movement_dvars();
 			self set_player_lives_solo();
 			self give_sallys();
+			self tomb_give_shovel();
 
 			self thread watch_for_respawn();
        		self thread disable_player_pers_upgrades();
@@ -111,133 +104,17 @@ onPlayerSpawned()
 	}
 }
 
-initializeVars()
+initFunctions()
 {
-	//game options
-	//level.playerHealthMod = getDvarIntDefault( "playerHealth", 100 );
-	//level.soloModeActive = getDvarIntDefault( "soloModeActive", 0 );
-	//level.wait_time = getDvarIntDefault( "waitTime", 30 ); //change this to adjust the start time
-	//level.player_quota = getDvarIntDefault( "playerQuota", 2 ); //change this value to change the player quota I don't recommend values higher than 2
-    //level.player_quota_active = getDvarIntDefault( "playerQuotaActive", 0 );  //set this to 0 disable player quotas recommended 1 for grief
-    //level.practiceModeActive = getDvarIntDefault( "practiceModeActive", 0 );
-    //level.zombieCounter = getDvarIntDefault( "zombieCounter", 0 );
-	//level.sallyStart = getDvarIntDefault( "sallyStart", 0 ); 
-	//level.powerOn = getDvarIntDefault( "powerOn", 0 );
-	//level.walkersActive = getDvarIntDefault( "walkersActive", 0 );
-	//level.permaPerksActive = getDvarIntDefault( "permaPerksActive", 0 );
-	//level.teleportDelay = getDvarIntDefault( "teleportDelay" , 15 );
-	
-	//level.firstRoomsTranzitNamesArray = [];
-	//level.firstRoomsNuketownNamesArray = [];
-	level.firstRoomsDieRiseNamesArray = [];
-	level.firstRoomsMoTDNamesArray = [];
-	level.firstRoomsBuriedNamesArray = [];
-	level.firstRoomsOriginsNamesArray = [];
-	level.firstRoomsNukeTownNamesArray = [];
-	level.firstRooms = [];
-
-	//starting rooms Die Rise
-	//level.m14DieRiseStartRoomName = "m14DieRise";
-	//roomName = level.m14DieRiseStartRoomName;
-	//map = "zm_highrise";
-
-	level.firstRoomsDieRiseNamesArray = array( "m14", "pdw", "svu", "m16", "an94", "mp5", "semtex", "b23r" );
-	level.firstRooms[ "m14" ] = spawnstruct();
-	level.firstRooms[ "m14" ].name = "m14";
-	level.firstRooms[ "m14" ].active = 0;
-	level.firstRooms[ "m14" ].active = 1;
-	level.firstRooms[ "m14" ].dontGiveQuickRevive = 0;	
-	level.firstRooms[ "pdw" ] = spawnstruct();
-	level.firstRooms[ "pdw" ].name = "pdw";
-	level.firstRooms[ "pdw" ].active = 0;
-	level.firstRooms[ "pdw" ].giveQuickRevive = 0;	
-	level.firstRooms[ "svu" ] = spawnstruct();
-	level.firstRooms[ "svu" ].name = "svu";
-	level.firstRooms[ "svu" ].active = getDvarIntDefault( "svuDieRise", 0 );
-	level.firstRooms[ "svu" ].giveQuickRevive = 1;	
-	level.firstRooms[ "m16" ] = spawnstruct();
-	level.firstRooms[ "m16" ].name = "m16";
-	level.firstRooms[ "m16" ].active = getDvarIntDefault( "m16DieRise", 0 );
-	level.firstRooms[ "m16" ].giveQuickRevive = 1;
-	level.firstRooms[ "an94" ] = spawnstruct();
-	level.firstRooms[ "an94" ].name = "an94";
-	level.firstRooms[ "an94" ].active = getDvarIntDefault( "an94DieRise", 0 );
-	level.firstRooms[ "an94" ].giveQuickRevive = 1;
-	level.firstRooms[ "mp5" ] = spawnstruct();
-	level.firstRooms[ "mp5" ].name = "mp5";
-	level.firstRooms[ "mp5" ].active = getDvarIntDefault( "mp5DieRise", 0 );
-	level.firstRooms[ "mp5" ].giveQuickRevive = 1;
-	level.firstRooms[ "semtex" ] = spawnstruct();
-	level.firstRooms[ "semtex" ].name = "semtex";
-	level.firstRooms[ "semtex" ].active = getDvarIntDefault( "semtexDieRise", 0 );
-	level.firstRooms[ "semtex" ].giveQuickRevive = 1;
-	level.firstRooms[ "b23r" ] = spawnstruct();
-	level.firstRooms[ "b23r" ].name = "b23r";
-	level.firstRooms[ "b23r" ].active = getDvarIntDefault( "b23rDieRise", 0 );
-	level.firstRooms[ "b23r" ].giveQuickRevive = 0;
-	
-	//starting rooms MoTD
-	level.firstRoomsMoTDNamesArray = array( "wardensOffice", "studio", "basement", "citadel", "infirmary", "cafeteria", "showers", "westCellblock" );
-	level.firstRooms[ "wardensOffice" ] = spawnstruct();
-	level.firstRooms[ "wardensOffice" ].name = "wardensOffice";
-	level.firstRooms[ "wardensOffice" ].active = getDvarIntDefault( "wardensOffice", 0 );
-	level.firstRooms[ "studio" ] = spawnstruct();
-	level.firstRooms[ "studio" ].name = "studio";
-	level.firstRooms[ "studio" ].active = getDvarIntDefault( "studio", 0 );
-	level.firstRooms[ "basement" ] = spawnstruct();
-	level.firstRooms[ "basement" ].name = "basement";
-	level.firstRooms[ "basement" ].active = getDvarIntDefault( "basement", 0 );
-	level.firstRooms[ "citadel" ] = spawnstruct();
-	level.firstRooms[ "citadel" ].name = "citadel";
-	level.firstRooms[ "citadel" ].active = getDvarIntDefault( "citadel", 0 );
-	level.firstRooms[ "infirmary" ] = spawnstruct();
-	level.firstRooms[ "infirmary" ].name = "infirmary";
-	level.firstRooms[ "infirmary" ].active = getDvarIntDefault( "infirmary", 0 );
-	level.firstRooms[ "cafeteria" ] = spawnstruct();
-	level.firstRooms[ "cafeteria" ].name = "cafeteria";
-	level.firstRooms[ "cafeteria" ].active = getDvarIntDefault( "cafeteria", 0 );
-	level.firstRooms[ "showers" ] = spawnstruct();
-	level.firstRooms[ "showers" ].name = "showers";
-	level.firstRooms[ "showers" ].active = getDvarIntDefault( "showers", 0 );
-	level.firstRooms[ "westCellblock" ] = spawnstruct();
-	//level.firstRooms[ "westCellblock" ].name = "westCellblock";
-	level.firstRooms[ "westCellblock" ].name = 1;
-	level.firstRooms[ "westCellblock" ].active = getDvarIntDefault( "westCellblock", 0 );
-	
-	//starting rooms Origins
-	level.firstRoomsOriginsNamesArray = array( "PAP", "middleBunker", "gen2", "gen2Trench", "gen3", "gen3Trench", "gen5" );
-	level.firstRooms[ "PAP" ] = spawnstruct();
-	level.firstRooms[ "PAP" ].name = "PAP";
-	level.firstRooms[ "PAP" ].active = getDvarIntDefault( "PAP", 0 );
-	level.firstRooms[ "PAP" ].active = 1;
-	level.firstRooms[ "middleBunker" ] = spawnstruct();
-	level.firstRooms[ "middleBunker" ].name = "middleBunker";
-	level.firstRooms[ "middleBunker" ].active = getDvarIntDefault( "middleBunker", 0 );
-	level.firstRooms[ "gen2" ] = spawnstruct();
-	level.firstRooms[ "gen2" ].name = "gen2";
-	level.firstRooms[ "gen2" ].active = getDvarIntDefault( "gen2", 0 );
-	level.firstRooms[ "gen2Trench" ] = spawnstruct();
-	level.firstRooms[ "gen2Trench" ].name = "gen2Trench";
-	level.firstRooms[ "gen2Trench" ].active = getDvarIntDefault( "gen2Trench", 0 );
-	level.firstRooms[ "gen3" ] = spawnstruct();
-	level.firstRooms[ "gen3" ].name = "gen3";
-	level.firstRooms[ "gen3" ].active = getDvarIntDefault( "gen3", 0 );
-	level.firstRooms[ "gen3Trench" ] = spawnstruct();
-	level.firstRooms[ "gen3Trench" ].name = "gen3Trench";
-	level.firstRooms[ "gen3Trench" ].active = getDvarIntDefault( "gen3Trench", 0 );
-	level.firstRooms[ "gen5" ] = spawnstruct();
-	level.firstRooms[ "gen5" ].name = "gen5";
-	level.firstRooms[ "gen5" ].active = getDvarIntDefault( "gen5", 0 );
-
-	//starting rooms Nuke Town
-	level.firstRoomsNukeTownNamesArray = array( "SteakoutNukeTown", "B23rNukeTown" );
-	level.firstRooms[ "SteakoutNukeTown" ] = spawnstruct();
-	level.firstRooms[ "SteakoutNukeTown" ].name = "SteakoutNukeTown";
-	level.firstRooms[ "SteakoutNukeTown" ].active = getDvarIntDefault( "SteakoutNukeTown", 0 );
-	level.firstRooms[ "SteakoutNukeTown" ].active = 1;
-	level.firstRooms[ "B23rNukeTown" ] = spawnstruct();
-	level.firstRooms[ "B23rNukeTown" ].name = "B23rNukeTown";
-	level.firstRooms[ "B23rNukeTown" ].active = getDvarIntDefault( "B23rNukeTown", 0 );
+	starting_round();
+    disable_walkers_toggle();
+	disable_carpenter();
+	wallbuy_increase_trigger_radius();
+	deleteBuyableDoorsTrigs();
+	deleteBuyableDebrisTrigs();
+	thread disable_pers_upgrades();
+	thread kill_start_chest();
+	thread zombiesleft_hud();
 }
 
 initializeTeleportLocations()
@@ -656,7 +533,7 @@ initStartingRoomZones()
 	level.belt_buried_zone = array( "zone_start_lower" );
 }
 
-firstRoomFuncsAndVars()
+initFirstRoomFuncsAndVars()
 {
 	initializeTeleportLocations();
 	initStartingRoomZones();
@@ -926,6 +803,18 @@ set_movement_dvars()
 	// setdvar( "dtp_startup_delay", 100 );
 }
 
+tomb_give_shovel()
+{
+	if(!(is_classic() && level.scr_zm_map_start_location == "tomb"))
+	{
+		return;
+	}
+
+	self.dig_vars[ "has_shovel" ] = 1;
+	n_player = self getentitynumber() + 1;
+	level setclientfield( "shovel_player" + n_player, 1 );
+}
+
 round_prestart_func() //this function is necessary for certain maps with custom round logic
 {
 	players = get_players();
@@ -1006,7 +895,6 @@ disable_player_pers_upgrades() //credit to jbleezy for this function
 	
 }
 
-
 kill_start_chest()
 {
 	flag_wait( "initial_blackscreen_passed" );
@@ -1028,27 +916,7 @@ watch_for_respawn()
 		wait_network_frame();
 		self setMaxHealth( getDvarInt( "player_health" ) );
 		self.health = getDvarInt( "player_health" );
-
-		// losing pisol fix
-		restore_weapons();
-
-		// if( level.script == "zm_tomb" )
-		// {
-		// 	if( !self hasweapon( "c96_zm" ) )
-		// 	{
-		// 		self giveWeapon( "c96_zm" );
-		// 		self SwitchToWeapon( "c96_zm" );
-		// 	}
-		// }
-		// else
-		// {
-		// 	if( !self hasweapon( "m1911_zm" ) )
-		// 	{
-		// 		self giveWeapon( "m1911_zm" );
-		// 		self SwitchToWeapon( "m1911_zm" );
-		// 	}
-		// }
-
+		restore_weapons(); 		// losing pistol fix
 	}
 }
 
@@ -1081,12 +949,12 @@ restore_weapons()
 	{
 		foreach( saved_weapon in self.saved_weapons)
 		{	
-			if ( self !maps/mp/zombies/_zm_weapons::has_weapon_or_upgrade( saved_weapon["name"] ) )
+			if ( !self maps/mp/zombies/_zm_weapons::has_weapon_or_upgrade( saved_weapon["name"] ) )
 			{
 				self maps/mp/zombies/_zm_weapons::weapondata_give(saved_weapon);
 			}
 		}
-		
+
 		current_wep = self getCurrentWeapon();
 		self switchToWeapon(current_wep);
 		self.saved_weapons = undefined;
