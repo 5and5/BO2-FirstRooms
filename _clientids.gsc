@@ -82,6 +82,8 @@ onPlayerSpawned()
 			self set_health();
 			self set_movement_dvars();
 			self set_player_lives_solo();
+			self disable_melee_lunge();
+			self enable_friendly_fire();
 			self give_sallys();
 			self tomb_give_shovel();
 
@@ -539,7 +541,6 @@ initFirstRoomFuncsAndVars()
 	initStartingRoomZones();
 	level.give_quick_revive = 1;
 	
-	//MoTD
 	if ( level.script == "zm_highrise" )
 	{   
 		if ( getDvarInt( "m14DieRise" ) == 1 )
@@ -803,6 +804,11 @@ set_movement_dvars()
 	// setdvar( "dtp_startup_delay", 100 );
 }
 
+enable_friendly_fire()
+{
+	setDvar( "g_friendlyfireDist", "0" );
+}
+
 tomb_give_shovel()
 {
 	if(!(is_classic() && level.scr_zm_map_start_location == "tomb"))
@@ -815,17 +821,6 @@ tomb_give_shovel()
 	level setclientfield( "shovel_player" + n_player, 1 );
 }
 
-round_prestart_func() //this function is necessary for certain maps with custom round logic
-{
-	players = get_players();
-	while ( players.size < level.player_quota && level.player_quota_active == 1 || players.size < 1 )
-	{
-		wait 0.5;
-		players = get_players();
-	}	
-	wait level.wait_time;
-}
-
 room_is_enabled( zone_name )
 {
 	if ( !isDefined( level.zones[ zone_name ] ) && !level.zones[ zone_name ].is_enabled )
@@ -833,6 +828,11 @@ room_is_enabled( zone_name )
 		return 0;
 	}
 	return 1;
+}
+
+disable_melee_lunge() //credit to jbleezy for this function
+{
+	setDvar( "aim_automelee_enabled", 0 );
 }
 
 disable_carpenter() //credit to jbleezy for this function
@@ -1075,7 +1075,6 @@ deleteBuyableDoorsTrigs()
 setup_first_room_zones( zones, teleportPoints )
 {
 	flag_wait( "start_zombie_round_logic" );
-	//flag_wait( "gameDelayDone" );
 	level.teleportDelay = 14;
 	if( level.script == "zm_prison" )
 	{	
@@ -1228,53 +1227,6 @@ player_in_allowed_four_zones_monitor( zones, teleportPoints )
 		}		
 		wait 1;
 	}
-}
-
-get_current_starting_room()
-{
-	location = getDvar( "ui_zm_mapstartlocation" );
-	switch ( location )
-	{
-    	case "rooftop":
-    		array = level.firstRoomsDieRiseNamesArray;
-    		break;
-    	case "prison":
-    		array = level.firstRoomsMoTDNamesArray;
-    		break;
-		case "buried":
-    		array = level.firstRoomsBuriedNamesArray;
-    		break;
-    	case "tomb":
-    		array = level.firstRoomsOriginsNamesArray;
-    		break;
-		case "nuked":
-    		array = level.firstRoomsNukeTownNamesArray;
-    		break;
-    	default:
-	}
-
-	if ( !isDefined( array ) )
-	{
-		if ( level.debugModeActive )
-		{
-			players = get_players();
-			players[ 0 ] iprintln( "Warning: Room Array is undefined" );
-		}
-		return "undefinedRoom";
-	}
-	for ( i = 0; i < array.size; i++ )
-	{	
-		if ( level.firstRooms[ array[ i ] ].active )
-		{
-			if ( level.debugModeActive )
-			{
-				players = get_players();
-				//players[ 0 ] iprintln( "Returning Room: " + level.firstRooms[ array[ i ] ].name );
-			}
-			return level.firstRooms[ array[ i ] ].name;
-		}
-	}
-	return 0;
 }
 
 zombiesleft_hud()
