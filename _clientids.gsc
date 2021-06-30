@@ -30,7 +30,7 @@
 
 init()
 {
-	initializeVars();
+	//initializeVars();
 	firstRoomFuncsAndVars();
 	starting_round();
     disable_walkers_toggle();
@@ -87,7 +87,10 @@ onPlayerSpawned()
             self.inital_spawns = false;
 
 			self set_points();
+			self set_health();
 			self set_movement_dvars();
+			self set_player_lives_solo();
+			self give_sallys();
 
 			self thread watch_for_respawn();
        		self thread disable_player_pers_upgrades();
@@ -95,30 +98,6 @@ onPlayerSpawned()
 			// mod menu
 			initOverFlowFix();
         }
-
-		self give_sallys();
-		self set_health();
-
-    	// if ( level.script == "zm_prison" )
-        // {
-		// 	self.lives = 1;
-		// 	//self setclientfieldtoplayer( "player_lives", self.lives );
-		// }
-
-		players = get_players();
-		if ( players == 1 )
-		{
-			flag_set( "solo_game" );
-			if ( isDefined( level.firstRooms[ get_current_starting_room() ].giveQuickRevive ) && level.firstRooms[ get_current_starting_room() ].giveQuickRevive ) 
-			{
-				self give_Perk( "specialty_quickrevive" );
-				level.solo_lives_given++;
-				self.lives = 1;
-				self.bought_solo_revive = 1;
-				self thread soloModeQuickReviveGiver();	
-			}	
-		}
-
 
         // mod menu
         if( !self.stopThreading )
@@ -167,7 +146,7 @@ initializeVars()
 	level.firstRooms[ "m14" ].name = "m14";
 	level.firstRooms[ "m14" ].active = 0;
 	level.firstRooms[ "m14" ].active = 1;
-	level.firstRooms[ "m14" ].giveQuickRevive = 0;	
+	level.firstRooms[ "m14" ].dontGiveQuickRevive = 0;	
 	level.firstRooms[ "pdw" ] = spawnstruct();
 	level.firstRooms[ "pdw" ].name = "pdw";
 	level.firstRooms[ "pdw" ].active = 0;
@@ -681,7 +660,7 @@ firstRoomFuncsAndVars()
 {
 	initializeTeleportLocations();
 	initStartingRoomZones();
-	level.player_out_of_playable_area_monitor = 0;
+	level.give_quick_revive = 1;
 	
 	//MoTD
 	if ( level.script == "zm_highrise" )
@@ -689,6 +668,7 @@ firstRoomFuncsAndVars()
 		if ( getDvarInt( "m14DieRise" ) == 1 )
 		{	
 	   		level thread setup_first_room_zones( level.m14_die_rise_zone, level.teleportPointsM14DieRise );
+			level.give_quick_revive = 0;
 	   	}
 	   	else if ( getDvarInt( "pdwDieRise" ) == 1 )
 	   	{	
@@ -905,6 +885,31 @@ starting_round()
 	level.first_round = 0; // fix first round bug
 }
 
+set_player_lives_solo()
+{
+	if ( level.script == "zm_prison" )
+	{
+		self.lives = 1;
+		self setclientfieldtoplayer( "player_lives", self.lives );
+	}
+	else if( get_players().size == 1 )
+	{
+		flag_set( "solo_game" );
+		if ( isDefined( level.give_quick_revive ) && level.give_quick_revive ) 
+		{
+			self thread soloModeQuickReviveGiver();	
+		}	
+	}
+}
+
+soloModeQuickReviveGiver()
+{
+	wait 3;
+	self give_Perk( "specialty_quickrevive", 0 );
+	self.lives = 1;
+	self.bought_solo_revive = 1;
+}
+
 set_points()
 {
     self.score = 2500;
@@ -1001,18 +1006,6 @@ disable_player_pers_upgrades() //credit to jbleezy for this function
 	
 }
 
-soloModeQuickReviveGiver()
-{
-	for ( revives = 0; revives < 2; revives++ )
-	{
-		self waittill( "player_revived" );
-		wait 1;
-		self give_Perk( "specialty_quickrevive", 0 );
-		self.lives = 1;
-		self.bought_solo_revive = 1;
-	}
-		
-}
 
 kill_start_chest()
 {
@@ -1027,6 +1020,8 @@ kill_start_chest()
 watch_for_respawn()
 {
 	self endon( "disconnect" );
+	self thread save_weapons();
+
 	while ( 1 )
 	{
 		self waittill_any( "spawned_player", "player_revived" );
@@ -1035,25 +1030,69 @@ watch_for_respawn()
 		self.health = getDvarInt( "player_health" );
 
 		// losing pisol fix
-		if( level.script == "zm_tomb" )
-		{
-			if( !self hasweapon( "c96_zm" ) )
+		restore_weapons();
+
+		// if( level.script == "zm_tomb" )
+		// {
+		// 	if( !self hasweapon( "c96_zm" ) )
+		// 	{
+		// 		self giveWeapon( "c96_zm" );
+		// 		self SwitchToWeapon( "c96_zm" );
+		// 	}
+		// }
+		// else
+		// {
+		// 	if( !self hasweapon( "m1911_zm" ) )
+		// 	{
+		// 		self giveWeapon( "m1911_zm" );
+		// 		self SwitchToWeapon( "m1911_zm" );
+		// 	}
+		// }
+
+	}
+}
+
+save_weapons()
+{
+	self endon("disconnect");
+
+	while (1)
+	{
+		primaries = self getweaponslistprimaries();
+		if (primaries.size >= 2)
+		{	
+			for( i = 0; primaries.size > i; i++ )
 			{
-				self giveWeapon( "c96_zm" );
-				self SwitchToWeapon( "c96_zm" );
+				self.saved_weapons[ i ] = maps/mp/zombies/_zm_weapons::get_player_weapondata(self, primarie);
 			}
 		}
 		else
 		{
-			if( !self hasweapon( "m1911_zm" ) )
-			{
-				self giveWeapon( "m1911_zm" );
-				self SwitchToWeapon( "m1911_zm" );
-			}
+			self.saved_weapons = undefined;
 		}
 
+		wait 0.05;
+	}	
+}
+
+restore_weapons()
+{
+	if (isDefined(self.saved_weapons) )
+	{
+		foreach( saved_weapon in self.saved_weapons)
+		{	
+			if ( self !maps/mp/zombies/_zm_weapons::has_weapon_or_upgrade( saved_weapon["name"] ) )
+			{
+				self maps/mp/zombies/_zm_weapons::weapondata_give(saved_weapon);
+			}
+		}
+		
+		current_wep = self getCurrentWeapon();
+		self switchToWeapon(current_wep);
+		self.saved_weapons = undefined;
 	}
 }
+
 
 enable_zone( zone_name )
 {
