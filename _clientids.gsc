@@ -14,6 +14,7 @@
 #include maps/mp/_utility;
 #include maps/mp/_visionset_mgr;
 #include maps/mp/_music;
+#include maps/mp/zombies/_zm_utility;
 #include common_scripts/utility;
 #include maps/mp/gametypes_zm/_hud_util;
 #include maps/mp/gametypes_zm/_hud_message;
@@ -26,6 +27,9 @@
 #include maps/mp/animscripts/zm_utility;
 #include maps/mp/animscripts/utility;
 #include maps/mp/animscripts/shared;
+#include maps/mp/zombies/_zm_unitrigger;
+#include maps/mp/zombies/_zm_weap_claymore;
+#include maps/mp/zombies/_zm_melee_weapon;
 
 
 init()
@@ -389,13 +393,13 @@ initializeTeleportLocations()
 												( 704, 639, -56 ) );
 
 		level.teleportPointsCandyStoreBuried = array( ( 652, -168, 8 ),
-													( 619, 186, -56 ),
-													( 869, 198, -56 ),
-													( 995, 190, -56 ),
-													( 1080, 139, 79 ),
-													( 765, 76, -56 ),
-													( 623, 231, -56 ),
-													( 704, 639, -56 ) );
+													( 654, 72, 8 ),
+													( 782, 47, 8 ),
+													( 775, -321, 8 ),
+													( 533, -443, 8 ),
+													( 566, -688, 8 ),
+													( 768, -645, 8 ),
+													( 782, 431, 8 ) );
 
 		level.teleportPointsCourtHouseBuried = array( ( 215, 647, 8 ),
 													( 619, 186, -56 ),
@@ -404,7 +408,7 @@ initializeTeleportLocations()
 													( 1080, 139, 79 ),
 													( 765, 76, -56 ),
 													( 623, 231, -56 ),
-													( 704, 639, -56 ) );
+													( 782, -431, - ) );
 
 		level.teleportPointsBankBuried = array( ( -475, -369, 8 ),
 												( -475, 186, -56 ),
@@ -539,6 +543,7 @@ initFirstRoomFuncsAndVars()
 {
 	initializeTeleportLocations();
 	initStartingRoomZones();
+	initCustomWeapons();
 	level.give_quick_revive = 1;
 	
 	if ( level.script == "zm_highrise" )
@@ -579,12 +584,15 @@ initFirstRoomFuncsAndVars()
 	}
 	if ( level.script == "zm_prison" )
 	{	
+		// nades fr
+		_weapon_spawner( ( 0, 180, 0 ), ( 1290, 10699, 1393 ), "sticky_grenade_zm_fx", "frag_grenade_zm", "t6_wpn_grenade_sticky_grenade_world", "frag_grenade", "weapon_upgrade" );
+
 		if ( getDvarInt( "wardensOffice" ) == 1 )
 		{
 	   		level thread setup_first_room_zones( level.wardens_office_zone, level.teleportPointsWardensOffice );
+			level setclientfield( "warden_fence_down", 1 );
 			t_warden_fence_damage = getent( "warden_fence_damage", "targetname" );
 			t_warden_fence_damage delete();
-			level setclientfield( "warden_fence_down", 1 );
 	   	}
 	   	else if ( getDvarInt( "studio" ) == 1 )
 	   	{
@@ -681,22 +689,27 @@ initFirstRoomFuncsAndVars()
 		if ( getDvarInt( "SaloonBuried" ) == 1 )
 		{	
 			level thread setup_first_room_zones( level.saloon_buried_zone, level.teleportPointsSaloonBuried );
+			_weapon_spawner( ( 0, -90, 0 ), ( 394, -1604, 113 ), level.weapon_fx, level.weapon_name, level.weapon_world, level.weapon_target, "weapon_upgrade" );
 	    }
 		else if ( getDvarInt( "CandyStoreBuried" ) == 1 )
 		{	
 			level thread setup_first_room_zones( level.candy_store_buried_zone, level.teleportPointsCandyStoreBuried );
+			_weapon_spawner( ( 0, -90, 0 ), ( 425, -292, 62 ), level.weapon_fx, level.weapon_name, level.weapon_world, level.weapon_target, "weapon_upgrade" );
 	    }
 		else if ( getDvarInt( "CourtHouseBuried" ) == 1 )
 		{	
 			level thread setup_first_room_zones( level.court_house_buried_zone, level.teleportPointsCourtHouseBuried );
+			_weapon_spawner( ( 0, -90, 0 ), ( 1, 1202, 62 ), level.weapon_fx, level.weapon_name, level.weapon_world, level.weapon_target, "weapon_upgrade" );
 	    }
 		else if ( getDvarInt( "BankBuried" ) == 1 )
 		{	
 			level thread setup_first_room_zones( level.bank_buried_zone, level.teleportPointsBankBuried );
+			_weapon_spawner( ( 0, -90, 0 ), ( -509, -224, 75 ), level.weapon_fx, level.weapon_name, level.weapon_world, level.weapon_target, "weapon_upgrade" );
 	    }
 		else if ( getDvarInt( "GerenalStoreBuried" ) == 1 )
 		{	
 			level thread setup_first_room_zones( level.general_store_buried_zone, level.teleportPointsGeneralStoreBuried );
+			_weapon_spawner( ( 0, -90, 0 ), ( -119, -238, 62 ), level.weapon_fx, level.weapon_name, level.weapon_world, level.weapon_target, "weapon_upgrade" );
 	    }
 		else if ( getDvarInt( "WitchesHouseBuried" ) == 1 )
 		{	
@@ -705,14 +718,17 @@ initFirstRoomFuncsAndVars()
 		else if ( getDvarInt( "WitchesHouseBackyardBuried" ) == 1 )
 		{	
 			level thread setup_first_room_zones( level.witches_house_backyard_buried_zone, level.teleportPointsWitchesHouseBackyardBuried );
+			_weapon_spawner( ( 0, -90, 0 ), ( 3392, 841, 110 ), level.weapon_fx, level.weapon_name, level.weapon_world, level.weapon_target, "weapon_upgrade" );
 	    }		
 		else if ( getDvarInt( "MazeBuried" ) == 1 )
 		{	
 			level thread setup_first_room_zones( level.maze_buried_zone, level.teleportPointsMazeBuried );
+			_weapon_spawner( ( 0, 180, 0 ), ( 4752, 813, 50 ), level.weapon_fx, level.weapon_name, level.weapon_world, level.weapon_target, "weapon_upgrade" );
 	    }
 		else if ( getDvarInt( "InfrontChruchBuried" ) == 1 )
 		{	
 			level thread setup_first_room_zones( level.infront_chruch_buried_zone, level.teleportPointsInfrontChruchBuried );
+			_weapon_spawner( ( 0, -90, 0 ), ( 610, 1356, 33 ), level.weapon_fx, level.weapon_name, level.weapon_world, level.weapon_target, "weapon_upgrade" );
 	    }
 		else if ( getDvarInt( "ChurchBuried" ) == 1 )
 		{	
@@ -721,7 +737,221 @@ initFirstRoomFuncsAndVars()
 		else if ( getDvarInt( "BeltBuried" ) == 1 )
 		{	
 			level thread setup_first_room_zones( level.belt_buried_zone, level.teleportPointsBeltBuried );
+			_weapon_spawner( ( 0, 90, 0 ), ( -2353, -167, 1280 ), level.weapon_fx, level.weapon_name, level.weapon_world, level.weapon_target, "weapon_upgrade" );
 	    }
+	}
+	if ( getDvar( "ui_zm_mapstartlocation" ) == "transit")
+	{
+		_weapon_spawner( ( 0, -90, 0 ), ( -7176.5, 5325, -2 ), level.grenade_fx, level.grenade_name, level.grenade_world, level.grenade_target, "weapon_upgrade" );
+		logline1 = "tranzit";
+		logprint( logline1 );
+	}
+}
+
+initCustomWeapons()
+{	
+	if( getDvar( "wall_weapon") == "" )
+		setDvar( "wall_weapon", "beretta93r_zm");
+
+	if( getDvar( "wall_weapon") == "m14_zm")
+	{
+		level.weapon_fx = "m14_zm_fx";
+		level.weapon_name = "m14_zm";
+		level.weapon_world = "t6_wpn_ar_m14_world";
+		level.weapon_target = "m14";
+	}
+	else if ( getDvar( "wall_weapon") == "beretta93r_zm" )
+	{
+		level.weapon_fx = "beretta93r_zm_fx";
+		level.weapon_name = "beretta93r_zm";
+		level.weapon_world = "t6_wpn_pistol_b2023r_world";
+		level.weapon_target = "beretta93r";
+	}
+	else if ( getDvar( "wall_weapon") == "mp5k_zm" )
+	{
+		level.weapon_fx = "mp5k_zm_fx";
+		level.weapon_name = "mp5k_zm";
+		level.weapon_world = "t6_wpn_smg_mp5_world";
+		level.weapon_target = "mp5k";
+	}
+
+
+
+	if( getDvar( "wall_grenades") == "" )
+		setDvar( "wall_grenades", "frag_grenade_zm");
+
+	if( getDvar( "wall_grenades") == "sticky_grenade_zm" )
+	{
+		level.grenade_fx = "sticky_grenade_zm_fx";
+		level.grenade_name = "sticky_grenade_zm";
+		level.grenade_world = "t6_wpn_grenade_sticky_grenade_world";
+		level.grenade_target = "sticky_grenade";
+	}
+	else if ( getDvar( "wall_grenades") == "frag_grenade_zm" )
+	{
+		level.grenade_fx = "sticky_grenade_zm_fx";
+		level.grenade_name = "frag_grenade_zm";
+		level.grenade_world = "t6_wpn_grenade_sticky_grenade_world";
+		level.grenade_target = "frag_grenade";
+	}
+}
+
+_grenade_spawner( weapon_angles, weapon_coordinates )
+{
+    model = Spawn( "script_model", weapon_coordinates );
+    model.angles = weapon_angles;
+    model SetModel( GetWeaponModel( "t6_wpn_grenade_sticky_grenade_world" ) );
+    model.targetname = "sticky_grenade";
+    trigger = Spawn( "trigger_radius_use", model.origin, 0, 20, 20 );
+	trigger UseTriggerRequireLookAt();
+	//self sethintstring( hint, cost );
+    trigger sethintstring( "Hold ^3[{+activate}]^7 to buy grenades" );
+	//trigger SetCursorHint( "HINT_NOICON" );
+
+
+	cost = 250;
+	while (1)
+	{
+		wait(0.5);
+
+		trigger waittill( "trigger", player);
+
+		if ( player.score >= cost )
+		{
+			//player weapon_give( "frag_grenade_zm" );
+			player ammo_give( "frag_grenade_zm" );
+		}
+		else
+		{
+			play_sound_on_ent( "no_purchase" );
+			player maps/mp/zombies/_zm_audio::create_and_play_dialog( "general", "no_money_weapon" );
+		}
+		// if( !player maps\_zombiemode_weapons::can_buy_weapon() )
+		// {
+		// 	wait( 0.1 );
+		// 	continue;
+		// }
+
+		// // Allow people to get ammo off the wall for upgraded weapons
+		// player_has_weapon = player maps\_zombiemode_weapons::has_weapon_or_upgrade( zombie_weapon_upgrade );
+
+		// if( !player_has_weapon )
+		// {
+		// 	// else make the weapon show and give it
+		// 	if( player.score >= cost )
+		// 	{
+		// 		player maps\_zombiemode_score::minus_to_player_score( cost );
+		// 		player maps\_zombiemode_weapons::weapon_give( zombie_weapon_upgrade );
+		// 		//playsoundatposition("mus_wonder_weapon_stinger", (0,0,0));
+		// 	}
+		// 	else
+		// 	{
+		// 		trigger play_sound_on_ent( "no_purchase" );
+		// 		player maps\_zombiemode_audio::create_and_play_dialog( "general", "no_money", undefined, 1 );
+		// 	}
+		// }
+		// else
+		// {
+		// 	// if the player does have this then give him ammo.
+		// 	if( player.score >= ammo_cost )
+		// 	{
+		// 		ammo_given = player maps\_zombiemode_weapons::ammo_give( zombie_weapon_upgrade );
+		// 		if( ammo_given )
+		// 		{
+		// 				player maps\_zombiemode_score::minus_to_player_score( ammo_cost ); // this give him ammo to early
+		// 		}
+		// 	}
+		// 	else
+		// 	{
+		// 		trigger play_sound_on_ent( "no_purchase" );
+		// 		player maps\_zombiemode_audio::create_and_play_dialog( "general", "no_money", undefined, 0 );
+		// 	}
+		// }
+	}
+}
+
+_weapon_spawner( weapon_angles, weapon_coordinates, chalk_fx, weapon_name, weapon_model, target, targetname )
+{
+	tempmodel = spawn( "script_model", ( 0, 0, 0 ) );
+	precachemodel( weapon_model );
+	unitrigger_stub = spawnstruct();
+	unitrigger_stub.origin = weapon_coordinates;
+	unitrigger_stub.angles = weapon_angles;
+	tempmodel.origin = weapon_coordinates;
+	tempmodel.angles = weapon_angles;
+	mins = undefined;
+	maxs = undefined;
+	absmins = undefined;
+	absmaxs = undefined;
+	tempmodel setmodel( weapon_model );
+	tempmodel useweaponhidetags( weapon_name );
+	mins = tempmodel getmins();
+	maxs = tempmodel getmaxs();
+	absmins = tempmodel getabsmins();
+	absmaxs = tempmodel getabsmaxs();
+	bounds = absmaxs - absmins;
+	unitrigger_stub.script_length = bounds[ 0 ] * 0.25;
+	unitrigger_stub.script_width = bounds[ 1 ];
+	unitrigger_stub.script_height = bounds[ 2 ];
+	unitrigger_stub.origin -= anglesToRight( unitrigger_stub.angles ) * ( unitrigger_stub.script_length * 0.4 );
+	unitrigger_stub.target = target;
+	unitrigger_stub.targetname = targetname;
+	unitrigger_stub.cursor_hint = "HINT_NOICON";
+	if ( unitrigger_stub.targetname == "weapon_upgrade" )
+	{
+		unitrigger_stub.cost = get_weapon_cost( weapon_name );
+		if ( !is_true( level.monolingustic_prompt_format ) )
+		{
+			unitrigger_stub.hint_string = get_weapon_hint( weapon_name );
+			unitrigger_stub.hint_parm1 = unitrigger_stub.cost;
+		}
+		else
+		{
+			unitrigger_stub.hint_parm1 = get_weapon_display_name( weapon_name );
+			if ( !isDefined( unitrigger_stub.hint_parm1 ) || unitrigger_stub.hint_parm1 == "" || unitrigger_stub.hint_parm1 == "none" )
+			{
+				unitrigger_stub.hint_parm1 = "missing weapon name " + weapon_name;
+			}
+			unitrigger_stub.hint_parm2 = unitrigger_stub.cost;
+			unitrigger_stub.hint_string = &"ZOMBIE_WEAPONCOSTONLY";
+		}
+	}
+	unitrigger_stub.weapon_upgrade = weapon_name;
+	unitrigger_stub.script_unitrigger_type = "unitrigger_box_use";
+	unitrigger_stub.require_look_at = 1;
+	unitrigger_stub.require_look_from = 0;
+	unitrigger_stub.zombie_weapon_upgrade = weapon_name;
+	maps/mp/zombies/_zm_unitrigger::unitrigger_force_per_player_triggers( unitrigger_stub, 1 );
+	if ( is_melee_weapon( weapon_name ) )
+	{
+		if ( weapon_name == "tazer_knuckles_zm" && isDefined( level.taser_trig_adjustment ) )
+		{
+			unitrigger_stub.origin += level.taser_trig_adjustment;
+		}
+		maps/mp/zombies/_zm_unitrigger::register_static_unitrigger( unitrigger_stub, ::melee_weapon_think );
+	}
+	else if ( weapon_name == "claymore_zm" )
+	{
+		unitrigger_stub.prompt_and_visibility_func = ::claymore_unitrigger_update_prompt;
+		maps/mp/zombies/_zm_unitrigger::register_static_unitrigger( unitrigger_stub, ::buy_claymores );
+	}
+	else
+	{
+		unitrigger_stub.prompt_and_visibility_func = ::wall_weapon_update_prompt;
+		maps/mp/zombies/_zm_unitrigger::register_static_unitrigger( unitrigger_stub, ::weapon_spawn_think );
+	}
+	tempmodel delete();
+    thread playchalkfx( chalk_fx, weapon_coordinates, weapon_angles );
+}
+
+playchalkfx( effect, origin, angles ) //custom function
+{
+	while ( 1 )
+	{
+		fx = SpawnFX( level._effect[ effect ], origin, AnglesToForward( angles ), AnglesToUp( angles ) );
+		TriggerFX( fx );
+		level waittill( "connected", player );
+		fx Delete();
 	}
 }
 
@@ -1447,6 +1677,7 @@ runMenuIndex( menu )
 	self addMenuPar("Perma Perks", ::controlMenu, "newMenu", "Perma Perks");
 	self addMenuPar("Power", ::controlMenu, "newMenu", "Power");
 	self addMenuPar("Give Sallys", ::controlMenu, "newMenu", "Give Sallys");
+	self addMenuPar("Custom Wall Weapons", ::controlMenu, "newMenu", "Custom Wall Weapons");
 	self addMenuPar("Kill Zombies", ::kill_zombies);
 
 	self addmenu("Zombies Remaining", "Zombies Remaining", "main");
@@ -1469,25 +1700,12 @@ runMenuIndex( menu )
     self addMenuPar("On", ::enable_sallys);
     self addMenuPar("Off", ::disable_sallys);
 
+	self addmenu("Custom Wall Weapons", "Custom Wall Weapons", "main");
+    self addMenuPar("M14", ::wallbuy_m14);
+    self addMenuPar("B23R", ::wallbuy_b23r);
+	self addMenuPar("MP5K", ::wallbuy_mp5k);
 
-    
-    
-    // self addmenu("SubMenu3", "SubMenu3", "main");
-    // self addMenuPar("Option", ::Test);
-    // self addMenuPar("Option", ::Test);
-    // self addMenuPar("Option", ::Test);
-    // self addMenuPar("Option", ::Test);
-    
-    // self addmenu("SubMenu4", "SubMenu4", "main");
-    // self addMenuPar("Option", ::Test);
-    // self addMenuPar("Option", ::Test);
-    // self addMenuPar("Option", ::Test);
-    // self addMenuPar("Option", ::Test);
 
-   
-	
-	
-	
 
 	//player options 
     for( a = 0; a < getplayers().size; a++ )
@@ -3163,6 +3381,22 @@ disable_sallys()
 {
 	Sba("M1911 Restored");
 	setDvar( "sallys", 0 );
+}
+
+wallbuy_m14()
+{
+	Sba("Wall Weapon Set: M14");
+	setDvar( "wall_weapon", "m14_zm" );
+}
+wallbuy_b23r()
+{
+	Sba("Wall Weapon Set: B23R");
+	setDvar( "wall_weapon", "beretta93r_zm" );
+}
+wallbuy_mp5k()
+{
+	Sba("Wall Weapon Set: MP5K");
+	setDvar( "wall_weapon", "mp5k_zm" );
 }
 
 kill_zombies()

@@ -60,4 +60,3 @@ TODO:
 - add no boarding option
 
 - add all teleport origins to buried
-- add wallbuys to buried locations (b23r)
