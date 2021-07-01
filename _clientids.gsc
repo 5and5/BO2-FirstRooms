@@ -384,13 +384,13 @@ initializeTeleportLocations()
 	if (level.script == "zm_buried")
     {
         level.teleportPointsSaloonBuried = array( ( 879, -1175, 56 ),
-												( 619, 186, -56 ),
-												( 869, 198, -56 ),
-												( 995, 190, -56 ),
-												( 1080, 139, 79 ),
-												( 765, 76, -56 ),
-												( 623, 231, -56 ),
-												( 704, 639, -56 ) );
+												( 590, -1164, 56 ),
+												( 442, -1315, 56 ),
+												( 433, -1520, 56 ),
+												( 627, -1821, 58 ),
+												( 825, -1797, 46 ),
+												( 972, -1708, 96 ),
+												( 946, -1561, 56 ) );
 
 		level.teleportPointsCandyStoreBuried = array( ( 652, -168, 8 ),
 													( 654, 72, 8 ),
@@ -402,85 +402,85 @@ initializeTeleportLocations()
 													( 782, 431, 8 ) );
 
 		level.teleportPointsCourtHouseBuried = array( ( 215, 647, 8 ),
-													( 619, 186, -56 ),
-													( 869, 198, -56 ),
-													( 995, 190, -56 ),
-													( 1080, 139, 79 ),
-													( 765, 76, -56 ),
-													( 623, 231, -56 ),
-													( 782, -431, - ) );
+													( 367, 655, 8 ),
+													( 530, 802, 8 ),
+													( -79, 793, 8 ),
+													( 36, 643, 8 ),
+													( -35, 952, 22 ),
+													( 453, 970, 8 ),
+													( 225, 1105, 8 ) );
 
 		level.teleportPointsBankBuried = array( ( -475, -369, 8 ),
-												( -475, 186, -56 ),
-												( 869, 198, -56 ),
-												( 995, 190, -56 ),
-												( 1080, 139, 79 ),
-												( 765, 76, -56 ),
-												( 623, 231, -56 ),
-												( 704, 639, -56 ) );
+												( -355, -362, 8 ),
+												( -345, -244, 24 ),
+												( -354, -143, 8 ),
+												( -356, 16, 8 ),
+												( -240, 21, 8 ),
+												( -479, 27, 30 ),
+												( -478, -99, 23 ) );
 
 		level.teleportPointsGeneralStoreBuried = array( ( 222, 17, 11 ),
-														( -475, 186, -56 ),
-														( 869, 198, -56 ),
-														( 995, 190, -56 ),
-														( 1080, 139, 79 ),
-														( 765, 76, -56 ),
-														( 623, 231, -56 ),
-														( 704, 639, -56 ) );
+														( 234, -227, 13 ),
+														( 189, -95, 8 ),
+														( 67, 45, 2 ),
+														( -140, 44, 12 ),
+														( -21, -141, -3 ),
+														( -25, -399, 8 ),
+														( -38, -714, 8 ) );
 
 		level.teleportPointsWitchesHouseBuried = array( ( 2234, 553, 103 ),
-														( -475, 186, -56 ),
-														( 869, 198, -56 ),
-														( 995, 190, -56 ),
-														( 1080, 139, 79 ),
-														( 765, 76, -56 ),
-														( 623, 231, -56 ),
-														( 704, 639, -56 ) );
+														( 2374, 557, 104 ),
+														( 2257, 360, 88 ),
+														( 2219, 872, 88 ),
+														( 2037, 727, 3 ),
+														( 1959, 423, -1 ),
+														( 1739, 424, 0 ),
+														( 1776, 726, 0 ) );
 
 		level.teleportPointsWitchesHouseBackyardBuried = array( ( 3458, 267, 50 ),
-														( -475, 186, -56 ),
-														( 869, 198, -56 ),
-														( 995, 190, -56 ),
-														( 1080, 139, 79 ),
-														( 765, 76, -56 ),
-														( 623, 231, -56 ),
-														( 704, 639, -56 ) );
+																( 3978, 245, 13 ),
+																( 3714, 139, 4 ),
+																( 3989, 480, 4 ),
+																( 3971, 689, 4 ),
+																( 3876, 841, 4 ),
+																( 3664, 845, 4 ),
+																( 3708, 1053, 4 ) );
 
 		level.teleportPointsMazeBuried = array( ( 5070, 702, 15 ),
-												( -475, 186, -56 ),
-												( 869, 198, -56 ),
-												( 995, 190, -56 ),
-												( 1080, 139, 79 ),
-												( 765, 76, -56 ),
-												( 623, 231, -56 ),
-												( 704, 639, -56 ) );
+												( 5085, 574, 15 ),
+												( 5069, 438, 15 ),
+												( 4970, 408, 4 ),
+												( 4851, 394, 4 ),
+												( 4727, 390, 4 ),
+												( 4742, 502, 4 ),
+												( 4747, 717, 4 ) );
 
 		level.teleportPointsInfrontChruchBuried = array( ( 1303, 1299, 16 ),
-														( -475, 186, -56 ),
-														( 869, 198, -56 ),
-														( 995, 190, -56 ),
-														( 1080, 139, 79 ),
-														( 765, 76, -56 ),
-														( 623, 231, -56 ),
-														( 704, 639, -56 ) );
+														( 1443, 1261, -17 ),
+														( 1554, 1178, -5 ),
+														( 1408, 1006, -15 ),
+														( 1151, 1377, -19 ),
+														( 1055, 1155, -0 ),
+														( 786, 1109, -7 ),
+														( 727, 1436, -14 ) );
 
 		level.teleportPointsChurchBuried = array( ( 1358, 1466, 16 ),
-												( -475, 186, -56 ),
-												( 869, 198, -56 ),
-												( 995, 190, -56 ),
-												( 1080, 139, 79 ),
-												( 765, 76, -56 ),
-												( 623, 231, -56 ),
-												( 704, 639, -56 ) );
+												( 1618, 1624, 14 ),
+												( 1264, 1753, 19 ),
+												( 1666, 2301, 40 ),
+												( 1758, 2032, 16 ),
+												( 1154, 2172, 46 ),
+												( 1214, 2341, 28 ),
+												( 1700, 1807, 16 ) );
 
 		level.teleportPointsBeltBuried = array( ( -2717, -120, 1224 ),
-												( -475, 186, -56 ),
-												( 869, 198, -56 ),
-												( 995, 190, -56 ),
-												( 1080, 139, 79 ),
-												( 765, 76, -56 ),
-												( 623, 231, -56 ),
-												( 704, 639, -56 ) );
+												( -2485, -118, 1224 ),
+												( -2244, -283, 1225 ),
+												( -2217, -474, 1241 ),
+												( -2418, -727, 1224 ),
+												( -2679, -748, 1227 ),
+												( -2872, -649, 1224 ),
+												( -2552, -410, 1265 ) );
 	}
 }
 
@@ -580,6 +580,7 @@ initFirstRoomFuncsAndVars()
 	    else if ( getDvarInt( "b23rDieRise" ) == 1 )
 	    {
 	    	level thread setup_first_room_zones( level.b23r_die_rise_zone, level.teleportPointsB23RDieRise );
+			level.give_quick_revive = 0;
 	    }
 	}
 	if ( level.script == "zm_prison" )
@@ -776,7 +777,6 @@ initCustomWeapons()
 	}
 
 
-
 	if( getDvar( "wall_grenades") == "" )
 		setDvar( "wall_grenades", "frag_grenade_zm");
 
@@ -793,80 +793,6 @@ initCustomWeapons()
 		level.grenade_name = "frag_grenade_zm";
 		level.grenade_world = "t6_wpn_grenade_sticky_grenade_world";
 		level.grenade_target = "frag_grenade";
-	}
-}
-
-_grenade_spawner( weapon_angles, weapon_coordinates )
-{
-    model = Spawn( "script_model", weapon_coordinates );
-    model.angles = weapon_angles;
-    model SetModel( GetWeaponModel( "t6_wpn_grenade_sticky_grenade_world" ) );
-    model.targetname = "sticky_grenade";
-    trigger = Spawn( "trigger_radius_use", model.origin, 0, 20, 20 );
-	trigger UseTriggerRequireLookAt();
-	//self sethintstring( hint, cost );
-    trigger sethintstring( "Hold ^3[{+activate}]^7 to buy grenades" );
-	//trigger SetCursorHint( "HINT_NOICON" );
-
-
-	cost = 250;
-	while (1)
-	{
-		wait(0.5);
-
-		trigger waittill( "trigger", player);
-
-		if ( player.score >= cost )
-		{
-			//player weapon_give( "frag_grenade_zm" );
-			player ammo_give( "frag_grenade_zm" );
-		}
-		else
-		{
-			play_sound_on_ent( "no_purchase" );
-			player maps/mp/zombies/_zm_audio::create_and_play_dialog( "general", "no_money_weapon" );
-		}
-		// if( !player maps\_zombiemode_weapons::can_buy_weapon() )
-		// {
-		// 	wait( 0.1 );
-		// 	continue;
-		// }
-
-		// // Allow people to get ammo off the wall for upgraded weapons
-		// player_has_weapon = player maps\_zombiemode_weapons::has_weapon_or_upgrade( zombie_weapon_upgrade );
-
-		// if( !player_has_weapon )
-		// {
-		// 	// else make the weapon show and give it
-		// 	if( player.score >= cost )
-		// 	{
-		// 		player maps\_zombiemode_score::minus_to_player_score( cost );
-		// 		player maps\_zombiemode_weapons::weapon_give( zombie_weapon_upgrade );
-		// 		//playsoundatposition("mus_wonder_weapon_stinger", (0,0,0));
-		// 	}
-		// 	else
-		// 	{
-		// 		trigger play_sound_on_ent( "no_purchase" );
-		// 		player maps\_zombiemode_audio::create_and_play_dialog( "general", "no_money", undefined, 1 );
-		// 	}
-		// }
-		// else
-		// {
-		// 	// if the player does have this then give him ammo.
-		// 	if( player.score >= ammo_cost )
-		// 	{
-		// 		ammo_given = player maps\_zombiemode_weapons::ammo_give( zombie_weapon_upgrade );
-		// 		if( ammo_given )
-		// 		{
-		// 				player maps\_zombiemode_score::minus_to_player_score( ammo_cost ); // this give him ammo to early
-		// 		}
-		// 	}
-		// 	else
-		// 	{
-		// 		trigger play_sound_on_ent( "no_purchase" );
-		// 		player maps\_zombiemode_audio::create_and_play_dialog( "general", "no_money", undefined, 0 );
-		// 	}
-		// }
 	}
 }
 
@@ -1132,7 +1058,6 @@ kill_start_chest()
 	start_chest = getstruct( "start_chest", "script_noteworthy" );
 	start_chest maps/mp/zombies/_zm_magicbox::hide_chest( 1 );
 	start_chest notify( "kill_chest_think" );
-
 }
 
 watch_for_respawn()
@@ -1146,7 +1071,7 @@ watch_for_respawn()
 		wait_network_frame();
 		self setMaxHealth( getDvarInt( "player_health" ) );
 		self.health = getDvarInt( "player_health" );
-		restore_weapons(); 		// losing pistol fix
+		restore_weapons(); 	// losing pistol fix
 	}
 }
 
@@ -1161,7 +1086,7 @@ save_weapons()
 		{	
 			for( i = 0; primaries.size > i; i++ )
 			{
-				self.saved_weapons[ i ] = maps/mp/zombies/_zm_weapons::get_player_weapondata(self, primarie);
+				self.saved_weapons[ i ] = maps/mp/zombies/_zm_weapons::get_player_weapondata(self, primaries[ i ] );
 			}
 		}
 		else
@@ -1190,7 +1115,6 @@ restore_weapons()
 		self.saved_weapons = undefined;
 	}
 }
-
 
 enable_zone( zone_name )
 {
@@ -1223,39 +1147,8 @@ enable_zone( zone_name )
 	}
 }
 
-
 disable_zones_exclude( zones_exclude )
 {
-/*
-	keys = getarraykeys( level.zones );
-	i = 0;
-	while ( i < keys.size )
-	{
-		keys[ i ].is_enabled = 0;
-		keys[ i ].is_spawning_allowed = 0;
-		keys[ i ].is_active = 0;
-		keys[ i ].is_occupied = 0;
-		spawn_points = maps/mp/gametypes_zm/_zm_gametype::get_player_spawns_for_gametype();
-		j = 0;
-		while ( j < spawn_points.size )
-		{
-			if ( spawn_points[ j ].script_noteworthy == keys[ i ] )
-			{
-				spawn_points[ j ].locked = 1;
-			}
-			j++;
-		}
-		entry_points = getstructarray(  i + "_barriers", "script_noteworthy" );
-		k = 0;
-		while ( k < entry_points.size )
-		{
-			entry_points[ k ].is_active = 0;
-			entry_points[ k ] trigger_off();
-			k++;
-		}
-		i++;
-	}
-*/
 	i = 0;
 	k = 0;
 	while ( k < zones_exclude.size )
