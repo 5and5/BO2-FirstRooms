@@ -8,7 +8,7 @@
 [Leaderboards](https://docs.google.com/spreadsheets/d/1eY93xGNydtTuZEoO-EQ-Qwj_ben_gRoHoEOYNFGGhXE/edit#gid=0)
 
 ## How to install
-- Copy compiled _clientids.gsc into Plutonuim\t6r\data\maps\mp\gametypes_zm
+- Copy compiled _clientids.gsc into `%localappdata%\Plutonium\storage\t6\scripts\zm`
 
 ## Based on JezuzLizard Mod
 
